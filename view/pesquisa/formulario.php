@@ -1,0 +1,67 @@
+<?php 
+  // session_start();
+
+  // INCLUDE TEMPLATE
+  include_once('conf/config.php');
+  include('template/header.php');
+
+?>
+<?php
+
+  $conn = Conexao::getInstance();
+
+	$stmt = $conn->prepare("SELECT id, nome FROM ava_tipo_opcao ");
+	$stmt->execute();
+	$resultTipoOpcao = $stmt->fetchAll();
+	echo json_encode($resultTipoOpcao);
+
+?>
+
+<!-- JAVASCRIPT -->
+<script type="text/javascript">
+	var resultTipoOpcao = <?=json_encode($resultTipoOpcao);?>;
+</script>
+
+<form action="javascript" method="POST" id="form_pesquisa" name="form_pesquisa">
+
+	<input type="hidden" id="proprietario_id" name="proprietario_id" value="1">
+	<input type="hidden" id="status" name="status" value="1">
+
+	<h2>Cadastro de Pesquisa</h2>
+
+	<!-- CAMPOS INICIO -->
+	<!-- PESQUISA INICIO -->
+
+	<label>Título
+		<input type="text" id="titulo" name="titulo" placeholder="Informe o título" value=""/>
+	</label><br/>
+
+	<label>Descrição
+		<input type="text" id="titulo" name="descricao" placeholder="Informe a descrição" value=""/>
+	</label><br/>
+
+	<hr>
+
+	<div id="div_perguntas">
+
+		<div id="div_pergunta_0" class="div_pergunta" contador="0">
+
+			<?php include("view/pergunta/formulario.php"); ?>
+
+		</div>
+		
+	</div>
+
+	<a href="" id="a_add_pergunta">Adicionar pergunta</button>
+
+	<br/>
+	<button>Cancelar</button>
+	<a href="#" id="a_finalizar">Finalizar</a>
+	<button>Pré-Visualizar</button>
+
+</form>
+
+<?php
+	require_once("template/footer.php");
+?>
+<script src="<?=JS_FOLDER?>pesquisa/formulario.js"></script>
