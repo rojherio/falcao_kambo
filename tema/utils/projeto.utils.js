@@ -2,7 +2,7 @@ var projetouniversal = {}
 
 //CONSTANTES
 //DESENVOLVIMENTO
-var PORTAL_URL 			 	= 'http://localhost/agenda/';
+var PORTAL_URL 			 	= 'http://localhost/avaliacao/';
 
 
 if (typeof console == "undefined")

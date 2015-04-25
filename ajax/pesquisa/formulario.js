@@ -4,10 +4,10 @@ $(document).ready(function() {
   carrega_tipo_opcao(0);
 
   //carrega nova pergunta no formulário ----------------------------------------------------------
-  $('a#a_add_pergunta').livequery("click", function(){
+  $('button#a_add_pergunta').livequery("click", function(){
     var count_p = ($('div#div_perguntas').find("div.div_pergunta").size());
     $('div#div_perguntas').append('<div id="div_pergunta_'+count_p+'" class="div_pergunta" contador="'+count_p+'"></div>');
-    $('div#div_pergunta_'+count_p).load('view/pergunta/formulario.php', {'key': count_p}, function(){
+    $('div#div_pergunta_'+count_p).load(PORTAL_URL+'view/pergunta/formulario.php', {'key': count_p}, function(){
       carrega_tipo_opcao(count_p);
     });
     return false;
