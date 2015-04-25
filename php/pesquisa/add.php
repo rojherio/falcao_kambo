@@ -11,14 +11,15 @@
 	$proprietarioId								= strip_tags($_POST['proprietario_id']);
 
 	$perguntaId										= $_POST['pergunta_id'];
+	$perguntaOrdem								= $_POST['pergunta_ordem'];
 	$perguntaTitulo								= $_POST['pergunta_titulo'];
 	$perguntaTextoAjuda						= $_POST['pergunta_texto_ajuda'];
 	$perguntaObrigatoria					= array();
 	$perguntaRedireciona 					= array();
 	$perguntaStatus			 					= $_POST['pergunta_status'];
 	$perguntaTipoOpcao 						= $_POST['pergunta_tipo_opcao'];
-	if(sizeof($perguntaTitulo) > 0){	
-		foreach ($perguntaTitulo as $key => $value) {
+	if(sizeof($perguntaOrdem) > 0){	
+		foreach ($perguntaOrdem as $key => $value) {
 			array_push($perguntaObrigatoria, (isset($_POST['pergunta_obrigatoria_'.$key]) ? true : false));
 			array_push($perguntaRedireciona, (isset($_POST['pergunta_redireciona_'.$key]) ? true : false));
 			// array_push($perguntaTipoOpcao, (isset($_POST['pergunta_redireciona_'.$key]) ? $_POST['pergunta_redireciona_'.$key] : 0));
@@ -74,7 +75,7 @@ ava_tipo_opcao
 
 			$idNew = $conn->lastInsertId();
 			
-			foreach ($perguntaTitulo as $key => $value) {
+			foreach ($perguntaOrdem as $key => $value) {
 
 				$stmt = $conn->prepare("INSERT INTO ava_pergunta (titulo, texto_ajuda, obrigatoria, redireciona, status, data_cadastro, pesquisa_id, tipo_opcao_id) 
 																	VALUES (:titulo, :texto_ajuda, :obrigatoria, :redireciona, :status, NOW(), :pesquisa_id, :tipo_opcao_id)");
@@ -102,10 +103,10 @@ ava_tipo_opcao
 
 				} else if ($perguntaTipoOpcao[$key] == 3 ) {
 
-					if (isset($_POST[$key.'_op_multipla_escolha'])) {
+					if (isset($_POST[$value.'_op_multipla_escolha'])) {
 
 						$countOp = 0;
-						foreach ($_POST[$key.'_op_multipla_escolha'] as $keyOp => $valueOp) {
+						foreach ($_POST[$value.'_op_multipla_escolha'] as $keyOp => $valueOp) {
 
 							if ($valueOp != "") {
 								$countOp++;
@@ -127,10 +128,10 @@ ava_tipo_opcao
 
 				} else if ($perguntaTipoOpcao[$key] == 4 ) {
 
-					if (isset($_POST[$key.'_op_caixa_selecao'])) {
+					if (isset($_POST[$value.'_op_caixa_selecao'])) {
 
 						$countOp = 0;
-						foreach ($_POST[$key.'_op_caixa_selecao'] as $keyOp => $valueOp) {
+						foreach ($_POST[$value.'_op_caixa_selecao'] as $keyOp => $valueOp) {
 
 							if ($valueOp != "") {
 								$countOp++;
@@ -152,10 +153,10 @@ ava_tipo_opcao
 
 				} else if ($perguntaTipoOpcao[$key] == 5 ) {
 
-					if (isset($_POST[$key.'_op_lista'])) {
+					if (isset($_POST[$value.'_op_lista'])) {
 
 						$countOp = 0;
-						foreach ($_POST[$key.'_op_lista'] as $keyOp => $valueOp) {
+						foreach ($_POST[$value.'_op_lista'] as $keyOp => $valueOp) {
 
 							if ($valueOp != "") {
 								$countOp++;
@@ -176,10 +177,10 @@ ava_tipo_opcao
 					}
 				} else if ($perguntaTipoOpcao[$key] == 6 ) {
 
-					if (isset($_POST[$key.'_op_escala_numero'])) {
+					if (isset($_POST[$value.'_op_escala_numero'])) {
 
 						$countOp = 0;
-						for ($keyOp = $_POST[$key.'_op_escala_numero'][0] ; $keyOp <= $_POST[$key.'_op_escala_numero'][1] ; $keyOp ) {
+						for ($keyOp = $_POST[$value.'_op_escala_numero'][0] ; $keyOp <= $_POST[$value.'_op_escala_numero'][1] ; $keyOp ) {
 
 							if ($valueOp != "") {
 								$countOp++;
@@ -237,12 +238,12 @@ ava_tipo_opcao
 
 				} else if ($perguntaTipoOpcao[$key] == 9 ) {
 
-					if (isset($_POST[$key.'_op_grade_linha']) && isset($_POST[$key.'_op_grade_coluna'])) {
+					if (isset($_POST[$value.'_op_grade_linha']) && isset($_POST[$value.'_op_grade_coluna'])) {
 
-						if (sizeof($_POST[$key.'_op_grade_linha']) > 1 && sizeof($_POST[$key.'_op_grade_linha']) > 1) {
+						if (sizeof($_POST[$value.'_op_grade_linha']) > 1 && sizeof($_POST[$value.'_op_grade_linha']) > 1) {
 
 							$countOp = 0;
-							foreach ($_POST[$key.'_op_grade_linha'] as $keyOp => $valueOp) {
+							foreach ($_POST[$value.'_op_grade_linha'] as $keyOp => $valueOp) {
 
 								if ($valueOp != "") {
 									$countOp++;
@@ -259,7 +260,7 @@ ava_tipo_opcao
 									$opcaoIdNew = $conn->lastInsertId();
 
 									$countOpAux = 0;
-									foreach ($_POST[$key.'_op_grade_coluna'] as $keyOpAux => $valueOpAux) {
+									foreach ($_POST[$value.'_op_grade_coluna'] as $keyOpAux => $valueOpAux) {
 
 										if ($valueOpAux != "") {
 											$countOpAux++;

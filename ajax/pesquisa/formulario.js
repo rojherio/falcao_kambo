@@ -1,15 +1,29 @@
 $(document).ready(function() {
 
-  //carrega option do primeiro select da pergunta tipo de opção-----------------------------------
-  carrega_tipo_opcao(0);
-
   //carrega nova pergunta no formulário ----------------------------------------------------------
-  $('button#a_add_pergunta').livequery("click", function(){
-    var count_p = ($('div#div_perguntas').find("div.div_pergunta").size());
+  $('button#add_pergunta').livequery("click", function(){
+    var count = $('input#count_pergunta_inc').val();
+    var count_p = Number(count)+(1);
+    console.log(count + ' '+count_p);
     $('div#div_perguntas').append('<div id="div_pergunta_'+count_p+'" class="div_pergunta" contador="'+count_p+'"></div>');
-    $('div#div_pergunta_'+count_p).load(PORTAL_URL+'view/pergunta/formulario.php', {'key': count_p}, function(){
-      carrega_tipo_opcao(count_p);
-    });
+    $('div#div_pergunta_'+count_p).html(pergunta(count_p));
+    $('input#count_pergunta_inc').val(count_p);
+    carrega_tipo_opcao(count_p);
+    renumera_pergunta();
+    return false;
+  });
+
+  //remove pergunta no formulário ----------------------------------------------------------
+  $('button#remove_pergunta').livequery("click", function(){
+    var count_p = ($('div#div_perguntas').find("div.div_pergunta").size());
+    if(count_p <= 1){
+      $(this).parents('div.div_pergunta').remove();
+      $('button#add_pergunta').click();
+      carrega_tipo_opcao(0);
+    }else{
+      $(this).parents('div.div_pergunta').remove();
+      renumera_pergunta();
+    }
     return false;
   });
 
@@ -20,6 +34,14 @@ $(document).ready(function() {
       retorno += ' <option value="'+obj['id']+'">'+obj['nome']+'</option>';
     });
     $('div#div_pergunta_'+key).find('select#pergunta_tipo_opcao').html(retorno);
+    return false;
+  }
+
+  //renumera pergunta ------------------------------------------------------------------------
+  function renumera_pergunta(){
+    $('div#div_perguntas').find('div.div_pergunta').each(function(i){
+      $(this).find('h4').html('Questão '+(i+1));
+    });
     return false;
   }
 
@@ -106,6 +128,53 @@ $(document).ready(function() {
   )
 
   */
+
+  //opcos das perguntas---------------------------------------------------------------------------
+  function pergunta(key){
+    var retorno = '';
+    retorno += '<input type="hidden" id="pergunta_id" name="pergunta_id[]" value="0">';
+    retorno += '<input type="hidden" id="pergunta_ordem" name="pergunta_ordem[]" value="'+key+'">';
+    retorno += '<input type="hidden" id="pergunta_status" name="pergunta_status[]" value="1">';
+    retorno += '<button id="remove_pergunta" type="button">Remover</button>';
+    retorno += '<h4>Questão</h4>';
+    retorno += '<label>Título&nbsp;';
+    retorno += '  <input type="text" id="pergunta_titulo" name="pergunta_titulo[]" placeholder="Informe o título" value=""/>';
+    retorno += '</label><br/>';
+    retorno += '<label>Texto de ajuda&nbsp;';
+    retorno += '  <input type="text" id="pergunta_texto_ajuda" name="pergunta_texto_ajuda[]" placeholder="Informe o texto de ajuda" value=""/>';
+    retorno += '</label><br/>';
+    retorno += '<label>Tipo de Pergunta&nbsp;';
+    retorno += '  <select id="pergunta_tipo_opcao" name="pergunta_tipo_opcao[]">';
+    retorno += '  </select>';
+    retorno += '</label>';
+    retorno += '<label>';
+    retorno += '  <input type="checkbox" id="pergunta_redireciona" name="pergunta_redireciona_'+key+'"/>';
+    retorno += '  Ir para página com base em uma resposta';
+    retorno += '</label>';
+    retorno += '<br/>';
+    retorno += '<label>';
+    retorno += '  <input type="checkbox" id="pergunta_obrigatoria" name="pergunta_obrigatoria_'+key+'"/>';
+    retorno += '  Obrigatória';
+    retorno += '</label><br/>';
+    retorno += '<h5>Opções</h5>';
+    retorno += '<div id="div_op">';
+    retorno += '  <div id="div_op_texto" class="div_op"><input type="text" id="'+key+'_op_texto" readonly="true" disabled="" placeholder="A resposta deles" value=""></div>';
+    retorno += '  <div id="div_op_paragrafo" class="div_op"></div>';
+    retorno += '  <div id="div_op_multipla_escolha" class="div_op"></div>';
+    retorno += '  <div id="div_op_caixa_selecao" class="div_op"></div>';
+    retorno += '  <div id="div_op_lista" class="div_op"></div>';
+    retorno += '  <div id="div_op_escala_numero" class="div_op"></div>';
+    retorno += '  <div id="div_op_escala_estrela" class="div_op"></div>';
+    retorno += '  <div id="div_op_escala_rosto" class="div_op"></div>';
+    retorno += '  <div id="div_op_grade_linha" class="div_op"></div>';
+    retorno += '  <div id="div_op_grade_coluna" class="div_op"></div>';
+    retorno += '  <div id="div_op_data" class="div_op"></div>';
+    retorno += '  <div id="div_op_horario" class="div_op"></div>';
+    retorno += '  <div id="div_op_curtir" class="div_op"></div>';
+    retorno += '</div>';
+    retorno += '<hr align="left" width="600">';
+    return retorno;
+  }
 
   //opcos das perguntas---------------------------------------------------------------------------
 
@@ -282,6 +351,12 @@ $(document).ready(function() {
       }//END IF
     return false;
   });
+
+  //carrega primeira pergunta no formulário ----------------------------------------------------------
+  var count_p = ($('div#div_perguntas').find("div.div_pergunta").size());
+  if(count_p == 0){
+    $('button#add_pergunta').click();
+  }
 
 });
 //ready fim ---------------------------------------------------------------------------------------------------------------------------

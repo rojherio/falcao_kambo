@@ -41,17 +41,13 @@
 
 	<hr>
 
+	<input type="hidden" id="count_pergunta_inc" value="-1">
+
 	<div id="div_perguntas">
 
-		<div id="div_pergunta_0" class="div_pergunta" contador="0">
-
-			<?php include("view/pergunta/formulario.php"); ?>
-
-		</div>
-		
 	</div>
 
-	<button id="a_add_pergunta" type="button">Adicionar pergunta</button>
+	<button id="add_pergunta" type="button">Adicionar pergunta</button>
 
 	<br/>
 	<button>Cancelar</button>
