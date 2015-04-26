@@ -47,7 +47,7 @@
 
 	</div>
 
-	<button id="add_pergunta" type="button">Adicionar pergunta</button>
+	<button id="add_pergunta">Adicionar pergunta</button>
 
 	<br/>
 	<button>Cancelar</button>
