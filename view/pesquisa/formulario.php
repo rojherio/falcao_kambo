@@ -8,11 +8,25 @@
 ?>
 <?php
 
+	$id    = !isset($_POST['id']) && isset($_GET['id']) ?  $_GET['id'] : isset($_POST['id']) ? $_POST['id'] : 0 ;
+	$param = Url::getURL( 3 );
+	$param = $param == '' && $id != ''  ? $id : $param;
+
+
   $conn = Conexao::getInstance();
 
 	$stmt = $conn->prepare("SELECT id, nome FROM ava_tipo_opcao ");
 	$stmt->execute();
 	$resultTipoOpcao = $stmt->fetchAll();
+
+	if( $param != null || $param != '' || $param != NULL ){
+
+	  $id = $param;
+	  // resultado do usuário
+	  
+	}else{
+
+	}
 
 ?>
 
