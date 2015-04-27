@@ -16,8 +16,8 @@ if($param != null || $param != '' || $param != NULL){
   $id = $param;
   //consulta do resultado do proprietário
   $result = $conn->prepare("SELECT id, cnpj, razaosocial, inscricaoestadual, nomefantasia, logo, email, telefone, celular, sms, nomeresponsavel, date_format(datacadastro, '%d/%m/%Y %h:%i') as datacadastro, cep, logradouro, numero, complemento, bairro, cidade, idestado, idpais
-                            FROM proprietario
-                            WHERE id = ? AND deletado = 0");
+                            FROM ava_proprietario
+                            WHERE id = ?");
   $result-> bindValue(1, $id);
   $result->execute();
   $dados = $result->fetch(PDO::FETCH_ASSOC);
@@ -27,11 +27,11 @@ if($param != null || $param != '' || $param != NULL){
   $razao_social                        = $dados['razaosocial'];
   $inscricao_estadual                  = $dados['inscricaoestadual'];
   $nome_fantasia                       = $dados['nomefantasia'];
-  $empresa_logo                        = $dados['logo'];
+ // $empresa_logo                        = $dados['logo'];
   $empresa_email                       = $dados['email'];
   $empresa_telefone                    = $dados['telefone'];
-  $empresa_celular                     = $celular['celular'];
-  $empresa_sms                         = $celular['sms'];
+  $empresa_celular                     = $dados['celular'];
+  $empresa_sms                         = $dados['sms'];
   $nome_responsavel                    = $dados['nomeresponsavel'];
   $empresa_datacadastro                = $dados['datacadastro'];
   $empresa_cep                         = $dados['cep'];
@@ -48,7 +48,7 @@ if($param != null || $param != '' || $param != NULL){
   $razao_social                        = '';
   $inscricao_estadual                  = '';
   $nome_fantasia                       = '';
-  $empresa_logo                        = '';
+  //$empresa_logo                        = '';
   $empresa_email                       = '';
   $empresa_telefone                    = '';
   $empresa_celular                     = '';
@@ -71,7 +71,7 @@ if($param != null || $param != '' || $param != NULL){
     <h4>Adicionar empresa</h4>
     <h5>
       <a href="<?=PORTAL_URL?>view/proprietario/index">« voltar à lista</a>
-      <?=$data_cadastro != '' ? '<br><i>Empresa cadastrada em '.$empresa_datacadastro.'</i>' : ''?>
+      <?=$empresa_datacadastro != '' ? '<br><i>Empresa cadastrada em '.$empresa_datacadastro.'</i>' : ''?>
     </h5>
   </div>
 
@@ -115,13 +115,13 @@ if($param != null || $param != '' || $param != NULL){
         </div>
       </div>
 
-      <div>
+      <!--<div>
         <label for="empresa_logo">Foto</label>
         <div>
-          <input type="file" id="empresa_logo" name="empresa_logo" class="fileArquivo" tabindex="2">
+          <input type="file" id="empresa_logo" name="empresa_logo" class="fileArquivo" tabindex="5">
           <p class="help-block">Arquivos válidos: (.jpg, .jpeg, .png)</p>
         </div>
-      </div><!-- END INPUT -->
+      </div> END INPUT -->
 
 
     </fieldset>
@@ -132,30 +132,30 @@ if($param != null || $param != '' || $param != NULL){
       <div>
         <label for="nome_responsavel">Nome do Responsável *</label>
         <div>
-          <input type="text" placeholder="Informe o nome do responsável" id="nome_responsavel" name="nome_responsavel" maxlength="80" tabindex="5" value="<?=$nome_responsavel?>">
+          <input type="text" placeholder="Informe o nome do responsável" id="nome_responsavel" name="nome_responsavel" maxlength="80" tabindex="6" value="<?=$nome_responsavel?>">
         </div>
       </div><!-- END INPUT -->
 
       <div>
         <label for="empresa_celular">Celular *</label>
         <div>
-          <input type="text" pattern="[0-9]{10}" placeholder="Informe o celular" id="empresa_celular" name="empresa_celular" tabindex="5" value="<?=$empresa_celular?>">
+          <input type="text" pattern="[0-9]{10}" placeholder="Informe o celular" id="empresa_celular" name="empresa_celular" tabindex="7" value="<?=$empresa_celular?>">
         </div>
 
-        <label for="empresa_sms"><input type="checkbox" id="empresa_sms" name="empresa_sms" tabindex="6" value="1" <?=$empresa_sms == '1' || $empresa_sms == '' ? 'checked="true"' : '' ?> > Receber SMS</label>
+        <label for="empresa_sms"><input type="checkbox" id="empresa_sms" name="empresa_sms" tabindex="8" value="1" <?=$empresa_sms == '1' || $empresa_sms == '' ? 'checked="true"' : '' ?> > Receber SMS</label>
       </div><!-- END INPUT -->
 
       <div>
         <label for="empresa_telefone">Telefone</label>
         <div>
-          <input type="text" pattern="[0-9]{10}" placeholder="Informe o telefone" id="empresa_telefone" name="empresa_telefone" tabindex="7" value="<?=$empresa_telefone?>">
+          <input type="text" pattern="[0-9]{10}" placeholder="Informe o telefone" id="empresa_telefone" name="empresa_telefone" tabindex="9" value="<?=$empresa_telefone?>">
         </div>
       </div><!-- END INPUT -->
 
       <div>
         <label for="empresa_email">E-mail</label>
         <div>
-          <input type="text" placeholder="Informe o e-mail" id="empresa_email" name="empresa_email" maxlength="100" tabindex="5" value="<?=$empresa_email?>">
+          <input type="text" placeholder="Informe o e-mail" id="empresa_email" name="empresa_email" maxlength="100" tabindex="10" value="<?=$empresa_email?>">
         </div>
       </div>
     </fieldset><!-- END FIELDSET -->
@@ -166,7 +166,7 @@ if($param != null || $param != '' || $param != NULL){
       <div>
         <label for="empresa_cep">CEP</label>
         <div>
-          <input type="text" placeholder="Informe o CEP" id="empresa_cep" name="empresa_cep" tabindex="8" value="<?=$empresa_cep?>">
+          <input type="text" placeholder="Informe o CEP" id="empresa_cep" name="empresa_cep" tabindex="11" value="<?=$empresa_cep?>">
         </div>
         <img id="preload-cep" class="display-n" src="<?=PORTAL_URL?>imagens/ajax.gif">
       </div><!-- END INPUT -->
@@ -174,36 +174,36 @@ if($param != null || $param != '' || $param != NULL){
       <div>
         <label for="empresa_logradouro">Logradouro</label>
         <div>
-          <input type="text" placeholder="Informe o logradouro" id="empresa_logradouro" name="empresa_logradouro" tabindex="9" value="<?=$empresa_logradouro?>">
+          <input type="text" placeholder="Informe o logradouro" id="empresa_logradouro" name="empresa_logradouro" tabindex="12" value="<?=$empresa_logradouro?>">
         </div>
 
         <label for="empresa_complemento">Complemento</label>
         <div>
-          <input type="text" placeholder="Informe o complemento" id="empresa_complemento" name="empresa_complemento" maxlength="40" tabindex="10" value="<?=$empresa_complemento?>">
+          <input type="text" placeholder="Informe o complemento" id="empresa_complemento" name="empresa_complemento" maxlength="40" tabindex="13" value="<?=$empresa_complemento?>">
         </div>
       </div><!-- END INPUT -->
 
       <div>
         <label for="empresa_numero">Número</label>
         <div>
-          <input type="text" placeholder="Informe o número" id="empresa_numero" name="empresa_numero" maxlength="11" tabindex="11" value="<?=$empresa_numero?>">
+          <input type="text" placeholder="Informe o número" id="empresa_numero" name="empresa_numero" maxlength="11" tabindex="14" value="<?=$empresa_numero?>">
         </div>
 
         <label for="empresa_bairro">Bairro</label>
         <div>
-          <input type="text" placeholder="Informe o bairro" id="empresa_bairro" name="empresa_bairro" tabindex="12" value="<?=$empresa_bairro?>">
+          <input type="text" placeholder="Informe o bairro" id="empresa_bairro" name="empresa_bairro" tabindex="15" value="<?=$empresa_bairro?>">
         </div>
       </div><!-- END INPUT -->
 
       <div>
         <label for="empresa_cidade">Cidade</label>
         <div>
-          <input type="text" placeholder="Informe a cidade" id="empresa_cidade" name="empresa_cidade" maxlength="60" tabindex="13" value="<?=$empresa_cidade?>">
+          <input type="text" placeholder="Informe a cidade" id="empresa_cidade" name="empresa_cidade" maxlength="60" tabindex="16" value="<?=$empresa_cidade?>">
         </div>
 
         <label for="empresa_estado">Estado</label>
         <div>
-          <select id="empresa_estado" name="empresa_estado" tabindex="14">
+          <select id="empresa_estado" name="empresa_estado" tabindex="17">
             <option value=""></option>
             <? $result = $oConexao->prepare("SELECT id, nome, uf FROM estado"); $result->execute();
             while( $dados = $result->fetch(PDO::FETCH_ASSOC) ){?>
@@ -232,7 +232,7 @@ if($param != null || $param != '' || $param != NULL){
         <button id="enviarformulario" type="submit" value="_save">Salvar</button>
         <button id="enviareditar" type="submit" value="_continue">Salvar e continuar editando</button>
         <button id="enviaradicionar" type="submit" value="_addanother">Salvar e adicionar outro</button>
-        <?if( $idpaciente != '' || $idpaciente != NULL ){ ?>
+        <?if( $idempresa != '' || $idempresa != NULL ){ ?>
           <button id="deletaritem" type="button" value="_delete"><i class="glyphicon glyphicon-trash"></i> Excluir</button>
         <? } ?>
         <img class="preload-submit display-n" src="<?=PORTAL_URL?>imagens/load.gif">
@@ -240,5 +240,6 @@ if($param != null || $param != '' || $param != NULL){
   </form>
 </div>
 
-
+<!-- INCLUDE JAVASCRIPT -->
+<script src="<?=PORTAL_URL?>ajax/proprietario/formulario.js"></script>
 <?include('template/footer.php');?>
