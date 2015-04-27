@@ -70,9 +70,11 @@ $(document).ready(function() {
 		} else if ($(this).val() == 8) {
 			$(this).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_escala_rosto').html(opcao_escala_rosto(contador));
 		} else if ($(this).val() == 9) {
-      $(this).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_grade_linha').html(opcao_grade_linha(contador, 1));
+      $(this).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_grade_linha').html('<label>Marcadores de Linha</label><br/>');
+      $(this).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_grade_linha').append(opcao_grade_linha(contador, 1));
       $(this).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_grade_linha').append(opcao_grade_linha(contador, 2)).append(button_add_opcao());
-      $(this).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_grade_coluna').html(opcao_grade_coluna(contador, 1));
+      $(this).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_grade_coluna').html('<label>Marcadores de Coluna</label><br/>');
+      $(this).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_grade_coluna').append(opcao_grade_coluna(contador, 1));
 			$(this).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_grade_coluna').append(opcao_grade_coluna(contador, 2)).append(button_add_opcao());
 		} else if ($(this).val() == 10) {
 			$(this).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_data').html(opcao_data(contador));
@@ -98,20 +100,34 @@ $(document).ready(function() {
     }else if(tipo == 'div_op_lista'){
       $(this).parents('div#div_add_opcao').before(opcao_lista(contador));
     }else if(tipo == 'div_op_grade_linha'){
-      $(this).parents('div#div_add_opcao').before(opcao_grade_linha(contador));
+      $(this).parents('div#div_add_opcao:first').before(opcao_grade_linha(contador));
+      // renumera_opcao_grade_linha(contador);
     }else if(tipo == 'div_op_grade_coluna'){
-      $(this).parents('div#div_add_opcao').before(opcao_grade_coluna(contador));
+      $(this).parents('div#div_add_opcao:last').before(opcao_grade_coluna(contador));
+      // renumera_opcao_grade_coluna(contador);
     }
     return false;
   });
 
   //remove uma opcao na pergunta caixa_selecao ----------------------------------------------------------
   $('button#remove_opcao').livequery('click', function(){
+    var tipo = $(this).parents('div.div_op').attr('id');
     var obj_div = $(this).parents('div.div_op');
+    var contador = $(obj_div).parents('div.div_pergunta').attr('contador');
     $(this).parents('div#div_opcao_row').remove();
     var cont_input = $(obj_div).find('input').length;
-    if(cont_input == 0){
-      $(obj_div).find('button#add_opcao').click();
+    if(tipo == 'div_op_grade_linha' || tipo == 'div_op_grade_coluna'){
+      if(cont_input == 1 && tipo == 'div_op_grade_linha'){
+        $(obj_div).find('button#add_opcao:first').click();
+      }else if(cont_input == 1 && tipo == 'div_op_grade_coluna'){
+        $(obj_div).find('button#add_opcao:last').click();
+      }
+      // renumera_opcao_grade_linha(contador);
+      // renumera_opcao_grade_coluna(contador);
+    }else{
+      if(cont_input == 0){
+        $(obj_div).find('button#add_opcao').click();
+      }
     }
     return false;
   });
@@ -177,9 +193,10 @@ $(document).ready(function() {
         cont_vazio += $(input).val().length == 0 ? 1 : 0;
         cont_input ++;
       });
-      if(cont_input == 1  || (cont_vazio < 1 && cont_input > 1)){
+      if(cont_input == 1 || (cont_vazio < 1 && cont_input > 1)){
         var contador = $(this).parents('div.div_pergunta').attr('contador');
         $(this).parents('div#div_op_grade_linha').find('div#div_add_opcao').before(opcao_grade_linha(contador));
+        // renumera_opcao_grade_linha(contador);
       }
     }
   });
@@ -197,6 +214,7 @@ $(document).ready(function() {
       if(cont_input == 1  || (cont_vazio < 1 && cont_input > 1)){
         var contador = $(this).parents('div.div_pergunta').attr('contador');
         $(this).parents('div#div_op_grade_coluna').find('div#div_add_opcao').before(opcao_grade_coluna(contador));
+        // renumera_opcao_grade_coluna(contador);
       }
     }
   });
@@ -217,6 +235,22 @@ $(document).ready(function() {
       $(div).html('');
     });
     return false;
+  }
+
+  //renumera opcoes de pergunta do tipo grade ------------------------------------------------------------------------
+  function renumera_opcao_grade_linha(key){
+    $('div#div_pergunta_'+key).find('div#div_op_grade_linha').find('label#label_op_grade_linha').each(function(i, label){
+      var element = $(this).find('input');
+      $(this).html('Marcador da Linha '+(i+1)+'&nbsp;<input type="text" id="'+key+'_op_grade_linha" class="op_grade_linha"  name="'+key+'_op_grade_linha[]" value="">');
+      $(this).find('input').val($(element).val());
+    });
+  }
+  function renumera_opcao_grade_coluna(key){
+    $('div#div_pergunta_'+key).find('div#div_op_grade_coluna').find('label#label_op_grade_coluna').each(function(i, label){
+      var element = $(this).find('input');
+      $(this).html('Marcador da Coluna '+(i+1)+'&nbsp;<input type="text" id="'+key+'_op_grade_coluna" class="op_grade_coluna"  name="'+key+'_op_grade_coluna[]" value="">');
+      $(this).find('input').val($(element).val());
+    });
   }
 
   //tipos opcos das perguntas no banco de dados------------------------------------------------------------------------
@@ -388,9 +422,7 @@ $(document).ready(function() {
   function opcao_grade_linha(key, keyLine){
     var retorno = '';
     retorno += '<div id="div_opcao_row">';
-    retorno += '  <label>Marcador da Linha '+keyLine+'&nbsp;';
-    retorno += '    <input type="text" id="'+key+'_op_grade_linha" class="op_grade_linha"  name="'+key+'_op_grade_linha[]" value="">';
-    retorno += '  </label>';
+    retorno += '  <input type="text" id="'+key+'_op_grade_linha" class="op_grade_linha"  name="'+key+'_op_grade_linha[]" value="">';
     retorno += '  <button id="remove_opcao">X</button><br/>';
     retorno += '</div>';
     return retorno;
@@ -399,9 +431,7 @@ $(document).ready(function() {
   function opcao_grade_coluna(key, keyColumn){
     var retorno = '';
     retorno += '<div id="div_opcao_row">';
-    retorno += '  <label>Marcador da Coluna '+keyColumn+'&nbsp;';
-    retorno += '    <input type="text" id="'+key+'_op_grade_coluna" class="op_grade_coluna"  name="'+key+'_op_grade_coluna[]" value="">';
-    retorno += '  </label>';
+    retorno += '  <input type="text" id="'+key+'_op_grade_coluna" class="op_grade_coluna"  name="'+key+'_op_grade_coluna[]" value="">';
     retorno += '  <button id="remove_opcao">X</button><br/>';
     retorno += '</div>';
     return retorno;
