@@ -1,7 +1,8 @@
 <?php
-	session_start();
-	require_once("../../conn/Connection.class.php");
-	require_once("../../util/config.php");
+	// session_start();
+
+include_once('conf/config.php');
+include_once('../../utils/funcoes.php');
 
 	//GET DATA
 	$id														= isset($_POST['id']) ? ($_POST['id'] != '' ? $_POST['id'] : 0 ) : 0;
@@ -28,7 +29,7 @@
 
 	$returnJson = array();
 
-	$conn = Connection::getInstance();
+	$conn = Conexao::getInstance();
 
 	$conn->beginTransaction();
 
@@ -394,14 +395,14 @@ ava_tipo_opcao
 
 		$conn->commit();
 		
-		$return['msg'] = "success";
-		echo json_encode($return);
+		$returnJson['msg'] = "success";
+		echo json_encode($returnJson);
 
 	}catch(Exception $e){
 		$conn->rollback();
-		$return['msg'] = "error";
-		$return['error'] = "Erro: ".$e;
-		echo json_encode($return);
+		$returnJson['msg'] = "error";
+		$returnJson['error'] = "Erro: ".$e;
+		echo json_encode($returnJson);
 	}
 
 ?>

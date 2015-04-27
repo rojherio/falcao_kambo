@@ -23,7 +23,7 @@
 
 	  $id = $param;
 	  // resultado do usuário
-	  
+
 	}else{
 
 	}
@@ -35,7 +35,7 @@
 	var resultTipoOpcao = <?=json_encode($resultTipoOpcao);?>;
 </script>
 
-<form action="javascript; " method="POST" id="form_pesquisa" name="form_pesquisa">
+<form action="javascript;" method="POST" id="form_pesquisa" name="form_pesquisa">
 
 	<input type="hidden" id="proprietario_id" name="proprietario_id" value="1">
 	<input type="hidden" id="status" name="status" value="1">
@@ -64,9 +64,9 @@
 	<button id="add_pergunta">Adicionar pergunta</button>
 
 	<br/>
-	<button>Cancelar</button>
-	<a href="#" id="a_finalizar">Finalizar</a>
-	<button>Pré-Visualizar</button>
+	<button id="btn_cancelar" type="submit" value="_cancelar">Cancelar</button>
+	<button id="btn_finalizar" type="submit" value="_finalizar">Finalizar</button>
+	<button id="btn_pre_visualizar" type="submit" value="_pre_visualizar">Pré-Visualizar</button>
 
 </form>
 

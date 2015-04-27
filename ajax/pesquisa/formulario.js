@@ -70,11 +70,9 @@ $(document).ready(function() {
 		} else if ($(this).val() == 8) {
 			$(this).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_escala_rosto').html(opcao_escala_rosto(contador));
 		} else if ($(this).val() == 9) {
-      $(this).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_grade_linha').html('<label>Marcadores de Linha</label><br/>');
-      $(this).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_grade_linha').append(opcao_grade_linha(contador, 1));
+      $(this).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_grade_linha').html(opcao_grade_linha(contador, 1));
       $(this).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_grade_linha').append(opcao_grade_linha(contador, 2)).append(button_add_opcao());
-      $(this).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_grade_coluna').html('<label>Marcadores de Coluna</label><br/>');
-      $(this).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_grade_coluna').append(opcao_grade_coluna(contador, 1));
+      $(this).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_grade_coluna').html(opcao_grade_coluna(contador, 1));
 			$(this).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_grade_coluna').append(opcao_grade_coluna(contador, 2)).append(button_add_opcao());
 		} else if ($(this).val() == 10) {
 			$(this).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_data').html(opcao_data(contador));
@@ -101,10 +99,10 @@ $(document).ready(function() {
       $(this).parents('div#div_add_opcao').before(opcao_lista(contador));
     }else if(tipo == 'div_op_grade_linha'){
       $(this).parents('div#div_add_opcao:first').before(opcao_grade_linha(contador));
-      // renumera_opcao_grade_linha(contador);
+      renumera_opcao_grade_linha(contador);
     }else if(tipo == 'div_op_grade_coluna'){
       $(this).parents('div#div_add_opcao:last').before(opcao_grade_coluna(contador));
-      // renumera_opcao_grade_coluna(contador);
+      renumera_opcao_grade_coluna(contador);
     }
     return false;
   });
@@ -122,8 +120,8 @@ $(document).ready(function() {
       }else if(cont_input == 1 && tipo == 'div_op_grade_coluna'){
         $(obj_div).find('button#add_opcao:last').click();
       }
-      // renumera_opcao_grade_linha(contador);
-      // renumera_opcao_grade_coluna(contador);
+      renumera_opcao_grade_linha(contador);
+      renumera_opcao_grade_coluna(contador);
     }else{
       if(cont_input == 0){
         $(obj_div).find('button#add_opcao').click();
@@ -135,7 +133,7 @@ $(document).ready(function() {
   //OPCAO MULTIPLA ESCOLHA
   //carrega nova opcao na pergunta multipla_escolha ----------------------------------------------------------
   $('input.op_multipla_escolha').livequery('keyup', function(){
-    if($(this).val().length == 1){
+    // if($(this).val().length == 1){
       var cont_vazio = 0;
       var cont_input = 0;
       $(this).parents('div.div_op').find("input[type='text']").each(function(i, input){
@@ -146,13 +144,13 @@ $(document).ready(function() {
         var contador = $(this).parents('div.div_pergunta').attr('contador');
         $(this).parents('div#div_op_multipla_escolha').find('div#div_add_opcao').before(opcao_multipla_escolha(contador));
       }
-    }
+    // }
   });
 
   //OPCAO CAIXA DE SELECAO
   //carrega nova opcao na pergunta caixa_selecao ----------------------------------------------------------
   $('input.op_caixa_selecao').livequery('keyup', function(){
-    if($(this).val().length == 1){
+    // if($(this).val().length == 1){
       var cont_vazio = 0;
       var cont_input = 0;
       $(this).parents('div.div_op').find("input[type='text']").each(function(i, input){
@@ -163,13 +161,13 @@ $(document).ready(function() {
         var contador = $(this).parents('div.div_pergunta').attr('contador');
         $(this).parents('div#div_op_caixa_selecao').find('div#div_add_opcao').before(opcao_caixa_selecao(contador));
       }
-    }
+    // }
   });
 
   //OPCAO LISTA
   //carrega nova opcao na pergunta lista ----------------------------------------------------------
   $('input.op_lista').livequery('keyup', function(){
-    if($(this).val().length == 1){
+    // if($(this).val().length == 1){
       var cont_vazio = 0;
       var cont_input = 0;
       $(this).parents('div.div_op').find("input[type='text']").each(function(i, input){
@@ -180,13 +178,13 @@ $(document).ready(function() {
         var contador = $(this).parents('div.div_pergunta').attr('contador');
         $(this).parents('div#div_op_lista').find('div#div_add_opcao').before(opcao_lista(contador));
       }
-    }
+    // }
   });
 
   //OPCAO LISTA
   //carrega nova opcao na pergunta grade_linha ----------------------------------------------------------
   $('input.op_grade_linha').livequery('keyup', function(){
-    if($(this).val().length == 1){
+    // if($(this).val().length == 1){
       var cont_vazio = 0;
       var cont_input = 0;
       $(this).parents('div.div_op').find("input[type='text']").each(function(i, input){
@@ -196,15 +194,15 @@ $(document).ready(function() {
       if(cont_input == 1 || (cont_vazio < 1 && cont_input > 1)){
         var contador = $(this).parents('div.div_pergunta').attr('contador');
         $(this).parents('div#div_op_grade_linha').find('div#div_add_opcao').before(opcao_grade_linha(contador));
-        // renumera_opcao_grade_linha(contador);
+        renumera_opcao_grade_linha(contador);
       }
-    }
+    // }
   });
 
   //OPCAO LISTA
   //carrega nova opcao na pergunta grade_coluna ----------------------------------------------------------
   $('input.op_grade_coluna').livequery('keyup', function(){
-    if($(this).val().length == 1){
+    // if($(this).val().length == 1){
       var cont_vazio = 0;
       var cont_input = 0;
       $(this).parents('div.div_op').find("input[type='text']").each(function(i, input){
@@ -214,9 +212,9 @@ $(document).ready(function() {
       if(cont_input == 1  || (cont_vazio < 1 && cont_input > 1)){
         var contador = $(this).parents('div.div_pergunta').attr('contador');
         $(this).parents('div#div_op_grade_coluna').find('div#div_add_opcao').before(opcao_grade_coluna(contador));
-        // renumera_opcao_grade_coluna(contador);
+        renumera_opcao_grade_coluna(contador);
       }
-    }
+    // }
   });
 
 //---------------------------------------------------------------------------------------------------------------------------
@@ -240,16 +238,12 @@ $(document).ready(function() {
   //renumera opcoes de pergunta do tipo grade ------------------------------------------------------------------------
   function renumera_opcao_grade_linha(key){
     $('div#div_pergunta_'+key).find('div#div_op_grade_linha').find('label#label_op_grade_linha').each(function(i, label){
-      var element = $(this).find('input');
-      $(this).html('Marcador da Linha '+(i+1)+'&nbsp;<input type="text" id="'+key+'_op_grade_linha" class="op_grade_linha"  name="'+key+'_op_grade_linha[]" value="">');
-      $(this).find('input').val($(element).val());
+      $(this).find('span').html('Marcador da Linha '+(i+1)+'&nbsp;');
     });
   }
   function renumera_opcao_grade_coluna(key){
     $('div#div_pergunta_'+key).find('div#div_op_grade_coluna').find('label#label_op_grade_coluna').each(function(i, label){
-      var element = $(this).find('input');
-      $(this).html('Marcador da Coluna '+(i+1)+'&nbsp;<input type="text" id="'+key+'_op_grade_coluna" class="op_grade_coluna"  name="'+key+'_op_grade_coluna[]" value="">');
-      $(this).find('input').val($(element).val());
+      $(this).find('span').html('Marcador da Coluna '+(i+1)+'&nbsp;');
     });
   }
 
@@ -422,7 +416,10 @@ $(document).ready(function() {
   function opcao_grade_linha(key, keyLine){
     var retorno = '';
     retorno += '<div id="div_opcao_row">';
-    retorno += '  <input type="text" id="'+key+'_op_grade_linha" class="op_grade_linha"  name="'+key+'_op_grade_linha[]" value="">';
+    retorno += '  <label id="label_op_grade_linha">';
+    retorno += '    <span>Marcador da Linha '+keyLine+'&nbsp;</span>';
+    retorno += '    <input type="text" id="'+key+'_op_grade_linha" class="op_grade_linha"  name="'+key+'_op_grade_linha[]" value="">';
+    retorno += '  </label>';
     retorno += '  <button id="remove_opcao">X</button><br/>';
     retorno += '</div>';
     return retorno;
@@ -431,7 +428,10 @@ $(document).ready(function() {
   function opcao_grade_coluna(key, keyColumn){
     var retorno = '';
     retorno += '<div id="div_opcao_row">';
-    retorno += '  <input type="text" id="'+key+'_op_grade_coluna" class="op_grade_coluna"  name="'+key+'_op_grade_coluna[]" value="">';
+    retorno += '  <label id="label_op_grade_coluna">';
+    retorno += '    <span>Marcador da Coluna '+keyColumn+'&nbsp;</span>';
+    retorno += '    <input type="text" id="'+key+'_op_grade_coluna" class="op_grade_coluna"  name="'+key+'_op_grade_coluna[]" value="">';
+    retorno += '  </label>';
     retorno += '  <button id="remove_opcao">X</button><br/>';
     retorno += '</div>';
     return retorno;
@@ -469,86 +469,187 @@ $(document).ready(function() {
     return retorno;
   }
 
-  //onError --------------------------------------------------------------------------------------
-  function onError(args) {
-    //console.log( 'onError: ' + args );
-    alert("Error: "+args);
-  }
-
 //---------------------------------------------------------------------------------------------------------------------------
 
   //finalizar cadastro de formulário de pesquisa--------------------------------------------------
-  $('a#a_finalizar').livequery( "click", function(){
+  
+  /* variaveis */
+  var $optionsubmit = null;
 
-    //contagem de error validate
-    var formValido = 1;
+  /* enviar formulário */
+  $("#form_pesquisa").validate({
+      rules: {
+        titulo: { required: true, minlength: 5 },
+      },
+      messages: {
+        titulo: { required: "O titulo da pesquisa é obrigatório", minlength:"Informe no mínimo 5 caracteres" },
+      },
+      //função para enviar após a validação
+      submitHandler: function( form ){
 
-      if( formValido ){
-        var queryString = $('#form_pesquisa').formSerialize();
-        // console.log(queryString);
-        var options = { 
-          data: queryString,
-          type: 'POST',
-          url: '/avaliacao/dao/pesquisa/add.php',
-          beforeSend: function(){
-              // $('#myModalProgressBar').modal('show');
-              // $("#progress").show();
-              // $("#progress-bar").width('0%');
-              // $("#progress-bar").html("0%");
-          },
-          uploadProgress: function(event, position, total, percentComplete){
-              // $("#progress-bar").width(percentComplete+'%');
-              // $("#progress-bar").html(percentComplete+'%');
-          },
-          success: function(data){
-              // $("#progress-bar").width('100%');
-              // $("#progress-bar").html('100%');
-              // $('#myModalProgressBar').modal('hide');
-          },
-          complete: function(returnJSON){
-            // console.log(data.responseText);
-            // converter o resultado em JSON
-            // var returnJSON = JSON.parse( data.responseText );
-
-            if(returnJSON.msg == 'error'){
-              // $('#alerta-retorno').addClass('alert-danger');
-              // $('#alerta-retorno').show();
-              // $('#mensagem-retorno').html('Error ao tentar efetuar o cadastro.');
-              console.log("erro");
-            }else if(returnJSON.msg == 'success' ){
-              // $('#alerta-retorno').addClass('alert-success');
-              // $('#alerta-retorno').show();
-              // $('#mensagem-retorno').html('Cadastro efetuado com sucesso.');
-              console.log("sucesso");
-            }
-
-            // $('#myModalProgressBar').modal('hide');
-            // $('#prev-modal').hide();
-            //$('.modal-backdrop').addClass('display-none');
-          },
-          error: function(response){
-            // $('#myModalProgressBar').modal('hide');
-
-            //converter o resultado em JSON
-            var returnJSON = JSON.parse( data.responseText );
-            if(returnJSON.msg == 'error'){
-              // $('#alerta-retorno').addClass('alert-danger');
-              // $('#alerta-retorno').show();
-              // $('#mensagem-retorno').html('Error ao tentar efetuar o cadastro.');
-              console.log("error: erro")
-            }
+        $('#return-feedback').hide();
+        $('#msg-feedback').html('');
+        $('.preload-submit').show();
+        projetouniversal.util.getjson({
+          url : PORTAL_URL+"php/pesquisa/pesquisa_salvar",
+          data : $(form).serialize(),
+          success : onSuccessSend,
+          error : onError
+        });
+        function onSuccessSend(obj){
+          switch( $optionsubmit ){
+            case '_finalizar':
+              /* salvar e voltar para listagem */
+              if( obj.msg == 'success' ){
+                $('.preload-submit').hide();
+                //enviar paramentros a url de listagem com mensagem
+                // postToURL(PORTAL_URL+'view/pesquisa/index', {id: obj.id, feedback: 'Cadastro efetuado com sucesso', type: 'success'});
+                console.log(obj.id);
+              }else if( obj.msg == 'error' ){
+                $('.preload-submit').hide();
+                console.log(obj.error);
+                // postToURL(PORTAL_URL+'view/pesquisa/index', {error: obj.error, feedback: 'Ocorreu um erro ao realizar a operação', type: 'error'});
+              }
+            break;
+            case '_cancelar':
+              /* salvar e continuar na pagina */
+              if( obj.msg == 'success' ){
+                $('.preload-submit').hide();
+                $('#return-feedback').show();
+                $('#return-feedback').addClass('alert-success');
+                $('#msg-feedback').html('<i class="glyphicon glyphicon-ok"></i> Cadastro efetuado com sucesso');
+                $('#return-feedback').slideDown( 300 ).delay( 5000 ).fadeOut( 800 );
+              }else if( obj.msg == 'error' ){
+                $('#return-feedback').show();
+                $('#return-feedback').addClass('alert-danger');
+                $('#msg-feedback').html('<i class="glyphicon glyphicon-remove"></i> Ocorreu um erro ao realizar a operação');
+                $('#return-feedback').slideDown( 300 ).delay( 5000 ).fadeOut( 800 );
+              }
+            break;
+            case '_pre_visualizar':
+              /* salvar e adicionar outro */
+              if( obj.msg == 'success' ){
+                $('.preload-submit').hide();
+                $('#return-feedback').show();
+                $('#return-feedback').addClass('alert-success');
+                $('#msg-feedback').html('<i class="glyphicon glyphicon-ok"></i> Cadastro efetuado com sucesso');
+                $('#return-feedback').slideDown( 300 ).delay( 5000 ).fadeOut( 800 );
+                $('#createform').parent().find('input:text, input:password, input:file, select, textarea').val('');
+                $('#createform').parent().find('input:radio, input:checkbox').removeAttr('checked').removeAttr('selected');
+                $('#paciente_nome').focus();
+                $('#paciente_status').prop("checked", true);
+                $('#paciente_sms').prop("checked", true);
+                $('#deletaritem').hide();
+                $('#idpaciente').val('');
+              }else if( obj.msg == 'error' ){
+                $('#return-feedback').show();
+                $('#return-feedback').addClass('alert-danger');
+                $('#msg-feedback').html('<i class="glyphicon glyphicon-remove"></i> Ocorreu um erro ao realizar a operação');
+                $('#return-feedback').slideDown( 300 ).delay( 5000 ).fadeOut( 800 );
+              }
+            break;
           }
-        };
-        //ENVIAR DADOS VIA AJAX
-        $('#form_pesquisa').ajaxSubmit(options);
-      }//END IF
-    return false;
+        }//end function
+        return false;
+      }
   });
+
+  /* enviar e editar */
+  $('button#btn_finalizar').livequery( "click", function(){
+    $optionsubmit = $(this).val();
+  });
+
+  /* enviar e editar */
+  $('button#btn_cancelar').livequery( "click", function(){
+    $optionsubmit = $(this).val();
+  });
+
+  /* enviar e adicionar outro */
+  $('button#btn_pre_visualizar').livequery( "click", function(){
+    $optionsubmit = $(this).val();
+  });
+
+
+  // $('button#_finalizaree').livequery( "click", function(){
+
+  //   //contagem de error validate
+  //   var formValido = 1;
+
+  //     if( formValido ){
+  //       var queryString = $('#form_pesquisa').formSerialize();
+  //       // console.log(queryString);
+  //       var options = { 
+  //         data: queryString,
+  //         type: 'POST',
+  //         url: '/avaliacao/dao/pesquisa/add.php',
+  //         beforeSend: function(){
+  //             // $('#myModalProgressBar').modal('show');
+  //             // $("#progress").show();
+  //             // $("#progress-bar").width('0%');
+  //             // $("#progress-bar").html("0%");
+  //         },
+  //         uploadProgress: function(event, position, total, percentComplete){
+  //             // $("#progress-bar").width(percentComplete+'%');
+  //             // $("#progress-bar").html(percentComplete+'%');
+  //         },
+  //         success: function(data){
+  //             // $("#progress-bar").width('100%');
+  //             // $("#progress-bar").html('100%');
+  //             // $('#myModalProgressBar').modal('hide');
+  //         },
+  //         complete: function(returnJSON){
+  //           // console.log(data.responseText);
+  //           // converter o resultado em x
+  //           // var returnJSON = JSON.parse( data.responseText );
+
+  //           if(returnJSON.msg == 'error'){
+  //             // $('#alerta-retorno').addClass('alert-danger');
+  //             // $('#alerta-retorno').show();
+  //             // $('#mensagem-retorno').html('Error ao tentar efetuar o cadastro.');
+  //             console.log("erro");
+  //           }else if(returnJSON.msg == 'success' ){
+  //             // $('#alerta-retorno').addClass('alert-success');
+  //             // $('#alerta-retorno').show();
+  //             // $('#mensagem-retorno').html('Cadastro efetuado com sucesso.');
+  //             console.log("sucesso");
+  //           }
+
+  //           // $('#myModalProgressBar').modal('hide');
+  //           // $('#prev-modal').hide();
+  //           //$('.modal-backdrop').addClass('display-none');
+  //         },
+  //         error: function(response){
+  //           // $('#myModalProgressBar').modal('hide');
+
+  //           //converter o resultado em JSON
+  //           var returnJSON = JSON.parse( data.responseText );
+  //           if(returnJSON.msg == 'error'){
+  //             // $('#alerta-retorno').addClass('alert-danger');
+  //             // $('#alerta-retorno').show();
+  //             // $('#mensagem-retorno').html('Error ao tentar efetuar o cadastro.');
+  //             console.log("error: erro")
+  //           }
+  //         }
+  //       };
+  //       //ENVIAR DADOS VIA AJAX
+  //       $('#form_pesquisa').ajaxSubmit(options);
+  //     }//END IF
+  //   return false;
+  // });
 
   //carrega primeira pergunta no formulário ----------------------------------------------------------
   var count_p = ($('div#div_perguntas').find("div.div_pergunta").size());
   if(count_p == 0){
     $('button#add_pergunta').click();
+  }
+
+  //onError --------------------------------------------------------------------------------------
+  function onError(args) {
+    //console.log( 'onError: ' + args );
+    $.each(args, function(key, value){
+      console.log(key +' - '+ value);
+    });
+    console.log("Error: "+args);
   }
 
 });
