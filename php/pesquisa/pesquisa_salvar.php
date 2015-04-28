@@ -2,7 +2,7 @@
 	// session_start();
 
 include_once('conf/config.php');
-include_once('../../utils/funcoes.php');
+// include_once('../../utils/funcoes.php');
 
 	//GET DATA
 	$id														= isset($_POST['id']) ? ($_POST['id'] != '' ? $_POST['id'] : 0 ) : 0;
@@ -266,14 +266,14 @@ ava_tipo_opcao
 										if ($valueOpAux != "") {
 											$countOpAux++;
 											$stmt = $conn->prepare("INSERT INTO ava_opcao (resposta, valor, direcao, tipo, controle, data_cadastro, pergunta_id, opcao_id_pai) 
-																								VALUES (:resposta, :valor, :direcao, :tipo, :controle, NOW(), :pergunta_id, :opcao_id_pai)");
+																								VALUES (:resposta, :valor, :direcao, :tipo, :controle, NOW(), :pergunta_id, :opcao_pai_id)");
 											$stmt->bindValue(":resposta", $valueOpAux);
 											$stmt->bindValue(":valor", 0);
 											$stmt->bindValue(":direcao", "");
 											$stmt->bindValue(":tipo", "");
 											$stmt->bindValue(":controle", $countOpAux);
 											$stmt->bindValue(":pergunta_id", $perguntaIdNew);
-											$stmt->bindValue(":opcao_id_pai", $opcaoIdNew);
+											$stmt->bindValue(":opcao_pai_id", $opcaoIdNew);
 											$stmt->execute();
 
 										}
@@ -345,6 +345,8 @@ ava_tipo_opcao
 				}
 
 			}
+
+			$returnJson['id'] = $idNew;
 
 		} else {
 

@@ -365,7 +365,7 @@ $(document).ready(function() {
   function opcao_lista(key){
     var retorno = '';
     retorno += '<div id="div_opcao_row">';
-    retorno += '  <input type="text" id="'+key+'_op_lista" class="op_lista" name="'+key+'_op_lista" value="">';
+    retorno += '  <input type="text" id="'+key+'_op_lista" class="op_lista" name="'+key+'_op_lista[]" value="">';
     retorno += '  <button id="remove_opcao">X</button><br/>';
     retorno += '</div>';
     return retorno;
@@ -375,13 +375,13 @@ $(document).ready(function() {
     var retorno = '';
     retorno += '<div id="div_opcao_row">';
     retorno += '  <label>De&nbsp;';
-    retorno += '    <select id="'+key+'_op_escala_numero" name="'+key+'_op_escala_numero">';
+    retorno += '    <select id="'+key+'_op_escala_numero" name="'+key+'_op_escala_numero[]">';
     retorno += '      <option value="0">0</option>';
     retorno += '      <option selected="" value="1">1</option>';
     retorno += '    </select>';
     retorno += '  </label>';
     retorno += '  <label>Até&nbsp;';
-    retorno += '    <select id="'+key+'_op_escala_numero" name="'+key+'_op_escala_numero">';
+    retorno += '    <select id="'+key+'_op_escala_numero" name="'+key+'_op_escala_numero[]">';
     retorno += '      <option value="2">2</option>';
     retorno += '      <option value="3">3</option>';
     retorno += '      <option value="4">4</option>';
