@@ -90,38 +90,38 @@ if($param != null || $param != '' || $param != NULL){
       <div>
         <label for="razao_social">Razão Social *</label>
         <div>
-          <input type="text" placeholder="Informe a razão social" id="razao_social" nome="razao_social" maxlength="80" tabindex="1" value="<?=$razao_social?>">
+          <input type="text" placeholder="Informe a razão social" id="razao_social" name="razao_social" maxlength="80" tabindex="1" value="<?=$razao_social?>">
         </div>
       </div>
 
       <div>
         <label for="nome_fantasia">Nome Fantasia</label>
         <div>
-          <input type="text" placeholder="Informe a nome fantasia" id="nome_fantasia" nome="nome_fantasia" maxlength="80" tabindex="2" value="<?=$nome_fantasia?>">
+          <input type="text" placeholder="Informe a nome fantasia" id="nome_fantasia" name="nome_fantasia" maxlength="80" tabindex="2" value="<?=$nome_fantasia?>">
         </div>
       </div>
 
       <div>
         <label for="empresa_cnpj">CNPJ *</label>
         <div>
-          <input type="text" placeholder="Informe o CNPJ" id="empresa_cnpj" nome="empresa_cnpj" tabindex="3" value="<?=$empresa_cnpj?>">
+          <input type="text" placeholder="Informe o CNPJ" id="empresa_cnpj" name="empresa_cnpj" tabindex="3" value="<?=$empresa_cnpj?>">
         </div>
       </div>
 
       <div>
         <label for="inscricao_estadual">Inscrição Estadual</label>
         <div>
-          <input type="text" placeholder="Informe a inscrição estadual" id="inscricao_estadual" nome="inscricao_estadual" tabindex="4" value="<?=$inscricao_estadual?>">
+          <input type="text" placeholder="Informe a inscrição estadual" id="inscricao_estadual" name="inscricao_estadual" tabindex="4" value="<?=$inscricao_estadual?>">
         </div>
       </div>
 
-      <!--<div>
+      <div>
         <label for="empresa_logo">Foto</label>
         <div>
           <input type="file" id="empresa_logo" name="empresa_logo" class="fileArquivo" tabindex="5">
           <p class="help-block">Arquivos válidos: (.jpg, .jpeg, .png)</p>
         </div>
-      </div> END INPUT -->
+      </div><!-- END INPUT -->
 
 
     </fieldset>
@@ -203,7 +203,7 @@ if($param != null || $param != '' || $param != NULL){
 
         <label for="empresa_estado">Estado</label>
         <div>
-          <select id="empresa_estado" name="empresa_estado" tabindex="17">
+          <select id="empresa_estado" class="selectpicker" name="empresa_estado" tabindex="17">
             <option value=""></option>
             <? $result = $oConexao->prepare("SELECT id, nome, uf FROM estado"); $result->execute();
             while( $dados = $result->fetch(PDO::FETCH_ASSOC) ){?>
@@ -216,7 +216,7 @@ if($param != null || $param != '' || $param != NULL){
       <div>
         <label for="empresa_pais">País</label>
         <div>
-          <select id="empresa_pais" name="empresa_pais" tabindex="19">
+          <select id="empresa_pais" class="selectpicker" name="empresa_pais" tabindex="19">
             <option value=""></option>
             <? $result = $oConexao->prepare("SELECT idpais, nome FROM pais"); $result->execute();
             while( $dados = $result->fetch(PDO::FETCH_ASSOC) ){?>

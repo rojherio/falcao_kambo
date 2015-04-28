@@ -34,58 +34,59 @@ $pasta                              = "upload/empresa/";
 try {
 
   $oConexao->beginTransaction();
-
-  if($idempresa != 0){//inicio if alterar
-/*
-        // VERIFICO SE EXISTE O CAMPO DE FOTO, CASO EXISTA ELE FAZ O UPLOAD DA IMAGEM E FAZ A INSERCAO NO BANNCO
-    if(isset($_FILES["empresa_logo"])){
-      //VERIFICAR A FOTO E UPLOAD
-      $foto_arq           = $_FILES["empresa_logo"];
-      if ($_FILES["empresa_logo"]["error"] > 0){
+  // VERIFICO SE EXISTE O CAMPO DE FOTO, CASO EXISTA ELE FAZ O UPLOAD DA IMAGEM E FAZ A INSERCAO NO BANNCO
+  if(isset($_FILES["empresa_logo"])){
+    //VERIFICAR A FOTO E UPLOAD
+    $foto_arq           = $_FILES["empresa_logo"];
+    if ($_FILES["empresa_logo"]["error"] > 0){
+      //MENSAGEM DE ERROR DE UPLOAD
+      $msg['msg']         = 'upload';
+      $msg['error'] = 'Error ao tentar fazer o upload da imagem, tente novamento mais tarde, erro: '.$foto_arq["error"];
+      echo json_encode($msg);
+      die();
+    }else{
+      //VERIFICA SE É UMA IMAGEM
+      if(!preg_match("/^image\/(pjpeg|jpeg|png)$/", $foto_arq["type"])){
         //MENSAGEM DE ERROR DE UPLOAD
         $msg['msg']         = 'upload';
-        $msg['error'] = 'Error ao tentar fazer o upload da imagem, tente novamento mais tarde, erro: '.$foto_arq["error"];
+        $msg['error'] = 'Por favor, selecione um arquivo de formato válido ou verifique o tamanho de arquivo, tamanho máximo de 2MB';
         echo json_encode($msg);
         die();
       }else{
-        //VERIFICA SE É UMA IMAGEM
-        if(!preg_match("/^image\/(pjpeg|jpeg|png)$/", $foto_arq["type"])){
-          //MENSAGEM DE ERROR DE UPLOAD
-          $msg['msg']         = 'upload';
-          $msg['error'] = 'Por favor, selecione um arquivo de formato válido ou verifique o tamanho de arquivo, tamanho máximo de 2MB';
-          echo json_encode($msg);
-          die();
-        }else{
-          // Pega extensão da imagem
-          preg_match("/\.(png|jpg|jpeg){1}$/i", $foto_arq["name"], $ext_arq);
-          // Gera um nome único para a imagem
-          $foto = md5(uniqid(time())).".".$ext_arq[1];
-          //Move arquivo para a pasta informada
-          move_uploaded_file($foto_arq["tmp_name"],$pasta.$foto);
-        }
+        // Pega extensão da imagem
+        preg_match("/\.(png|jpg|jpeg){1}$/i", $foto_arq["name"], $ext_arq);
+        // Gera um nome único para a imagem
+        $foto = md5(uniqid(time())).".".$ext_arq[1];
+        //Move arquivo para a pasta informada
+        move_uploaded_file($foto_arq["tmp_name"],$pasta.$foto);
       }
-    }*/
+    }
+  }
 
-    $stmt = $oConexao->prepare("UPDATE ava_proprietario SET cnpj = ?, razaosocial = ?, inscricaoestadual = ?, nomefantasia = ?, email = ?, telefone = ?, celular = ?, sms = ?, nomeresponsavel = ?, cep = ?, logradouro = ?, numero = ?, complemento = ?, bairro = ?, cidade = ?, idestado = ?, idpais = ? WHERE id = ?");
+  if($idempresa != 0){//inicio if alterar
+
+
+
+    $stmt = $oConexao->prepare("UPDATE ava_proprietario SET cnpj = ?, razaosocial = ?, inscricaoestadual = ?, nomefantasia = ?, logo = ?, email = ?, telefone = ?, celular = ?, sms = ?, nomeresponsavel = ?, cep = ?, logradouro = ?, numero = ?, complemento = ?, bairro = ?, cidade = ?, idestado = ?, idpais = ? WHERE id = ?");
     $stmt->bindValue(1, $empresa_cnpj);
     $stmt->bindValue(2, $razao_social);
     $stmt->bindValue(3, $inscricao_estadual);
     $stmt->bindValue(4, $nome_fantasia);
-    //$stmt->bindValue(5, $foto);
-    $stmt->bindValue(5, $empresa_email);
-    $stmt->bindValue(6, $empresa_telefone);
-    $stmt->bindValue(7, $empresa_celular);
-    $stmt->bindValue(8, $empresa_sms);
-    $stmt->bindValue(9, $nome_responsavel);
-    $stmt->bindValue(10, $empresa_cep);
-    $stmt->bindValue(11, $empresa_logradouro);
-    $stmt->bindValue(12, $empresa_numero);
-    $stmt->bindValue(13, $empresa_complemento);
-    $stmt->bindValue(14, $empresa_bairro);
-    $stmt->bindValue(15, $empresa_cidade);
-    $stmt->bindValue(16, $empresa_estado);
-    $stmt->bindValue(17, $empresa_pais);
-    $stmt->bindValue(18, $idempresa);
+    $stmt->bindValue(5, $foto);
+    $stmt->bindValue(6, $empresa_email);
+    $stmt->bindValue(7, $empresa_telefone);
+    $stmt->bindValue(8, $empresa_celular);
+    $stmt->bindValue(9, $empresa_sms);
+    $stmt->bindValue(10, $nome_responsavel);
+    $stmt->bindValue(11, $empresa_cep);
+    $stmt->bindValue(12, $empresa_logradouro);
+    $stmt->bindValue(13, $empresa_numero);
+    $stmt->bindValue(14, $empresa_complemento);
+    $stmt->bindValue(15, $empresa_bairro);
+    $stmt->bindValue(16, $empresa_cidade);
+    $stmt->bindValue(17, $empresa_estado);
+    $stmt->bindValue(18, $empresa_pais);
+    $stmt->bindValue(19, $idempresa);
 
     $stmt->execute();
 
@@ -99,56 +100,27 @@ try {
     exit();
 
   } else {// inicio salvar
-/*
-    // VERIFICO SE EXISTE O CAMPO DE FOTO, CASO EXISTA ELE FAZ O UPLOAD DA IMAGEM E FAZ A INSERCAO NO BANNCO
-    if(isset($_FILES["empresa_logo"])){
-      //VERIFICAR A FOTO E UPLOAD
-      $foto_arq           = $_FILES["empresa_logo"];
-      if ($_FILES["empresa_logo"]["error"] > 0){
-        //MENSAGEM DE ERROR DE UPLOAD
-        $msg['msg']         = 'upload';
-        $msg['error'] = 'Error ao tentar fazer o upload da imagem, tente novamento mais tarde, erro: '.$foto_arq["error"];
-        echo json_encode($msg);
-        die();
-      }else{
-        //VERIFICA SE É UMA IMAGEM
-        if(!preg_match("/^image\/(pjpeg|jpeg|png)$/", $foto_arq["type"])){
-          //MENSAGEM DE ERROR DE UPLOAD
-          $msg['msg']         = 'upload';
-          $msg['error'] = 'Por favor, selecione um arquivo de formato válido ou verifique o tamanho de arquivo, tamanho máximo de 2MB';
-          echo json_encode($msg);
-          die();
-        }else{
-          // Pega extensão da imagem
-          preg_match("/\.(png|jpg|jpeg){1}$/i", $foto_arq["name"], $ext_arq);
-          // Gera um nome único para a imagem
-          $foto = md5(uniqid(time())).".".$ext_arq[1];
-          //Move arquivo para a pasta informada
-          move_uploaded_file($foto_arq["tmp_name"],$pasta.$foto);
-        }
-      }
-    }
-*/
-    $stmt = $oConexao->prepare("INSERT INTO ava_proprietario(cnpj, razaosocial, inscricaoestadual, nomefantasia, email, telefone, celular, sms, nomeresponsavel, datacadastro, cep, logradouro, numero, complemento, bairro, cidade, idestado, idpais, status)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, now(), ?, ?, ?, ?, ?, ?, ?, ?, 1);");
+
+    $stmt = $oConexao->prepare("INSERT INTO ava_proprietario(cnpj, razaosocial, inscricaoestadual, nomefantasia, logo, email, telefone, celular, sms, nomeresponsavel, datacadastro, cep, logradouro, numero, complemento, bairro, cidade, idestado, idpais, status)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), ?, ?, ?, ?, ?, ?, ?, ?, 1);");
     $stmt->bindValue(1, $empresa_cnpj);
     $stmt->bindValue(2, $razao_social);
     $stmt->bindValue(3, $inscricao_estadual);
     $stmt->bindValue(4, $nome_fantasia);
-    //$stmt->bindValue(5, $foto);
-    $stmt->bindValue(5, $empresa_email);
-    $stmt->bindValue(6, $empresa_telefone);
-    $stmt->bindValue(7, $empresa_celular);
-    $stmt->bindValue(8, $empresa_sms);
-    $stmt->bindValue(9, $nome_responsavel);
-    $stmt->bindValue(10, $empresa_cep);
-    $stmt->bindValue(11, $empresa_logradouro);
-    $stmt->bindValue(12, $empresa_numero);
-    $stmt->bindValue(13, $empresa_complemento);
-    $stmt->bindValue(14, $empresa_bairro);
-    $stmt->bindValue(15, $empresa_cidade);
-    $stmt->bindValue(16, $empresa_estado);
-    $stmt->bindValue(17, $empresa_pais);
+    $stmt->bindValue(5, $foto);
+    $stmt->bindValue(6, $empresa_email);
+    $stmt->bindValue(7, $empresa_telefone);
+    $stmt->bindValue(8, $empresa_celular);
+    $stmt->bindValue(9, $empresa_sms);
+    $stmt->bindValue(10, $nome_responsavel);
+    $stmt->bindValue(11, $empresa_cep);
+    $stmt->bindValue(12, $empresa_logradouro);
+    $stmt->bindValue(13, $empresa_numero);
+    $stmt->bindValue(14, $empresa_complemento);
+    $stmt->bindValue(15, $empresa_bairro);
+    $stmt->bindValue(16, $empresa_cidade);
+    $stmt->bindValue(17, $empresa_estado);
+    $stmt->bindValue(18, $empresa_pais);
     $stmt->execute();
     //recupera o ultimo id inserido
     $idEmpresaNew = $oConexao->lastInsertId('id');

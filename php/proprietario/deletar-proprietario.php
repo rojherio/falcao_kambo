@@ -25,7 +25,8 @@ try{
         $num = $result->rowCount();
 
         if ( $num <= 0 ) {
-            $stmt = $oConexao->prepare("DELETE FROM ava_proprietario WHERE id = ?");
+            //$stmt = $oConexao->prepare("DELETE FROM ava_proprietario WHERE id = ?");
+            $stmt = $oConexao->prepare("UPDATE ava_proprietario SET status = 0 WHERE id = ?");
             $stmt->bindValue(1, $idempresa);
             $stmt->execute();
         }else{
