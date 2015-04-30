@@ -38,7 +38,7 @@ try{
 
         if ($pacienteNaoDeletado > 0) {
             $msg['msg'] = 'error';
-            $msg['error'] = 'As informações não foram deletadas, pois existe registro de agendamento à este paciente.';
+            $msg['error'] = 'As informações não foram deletadas, pois existe registro de pesquisas relacionada à esta empresa.';
         }else{
             $msg['msg'] = 'success';
         }
@@ -59,7 +59,8 @@ try{
             $num = $result->rowCount();
 
             if ( $num <= 0 ) {
-                $stmt = $oConexao->prepare("DELETE FROM ava_proprietario WHERE id = ?");
+                //$stmt = $oConexao->prepare("DELETE FROM ava_proprietario WHERE id = ?");
+                $stmt = $oConexao->prepare("UPDATE ava_proprietario SET status = 0 WHERE id = ?");
                 $stmt->bindValue(1, $item);
                 $stmt->execute();
             }else{
@@ -73,7 +74,7 @@ try{
 
         if ($pacienteNaoDeletado > 0) {
             $msg['msg'] = 'error';
-            $msg['error'] = 'As informações não foram deletadas, pois existe registro de agendamento à este paciente.';
+            $msg['error'] = 'As informações não foram deletadas, pois existe registro de pesquisas relacionada à esta empresa.';
         }else{
             $msg['msg'] = 'success';
         }

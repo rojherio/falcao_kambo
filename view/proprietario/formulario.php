@@ -123,7 +123,6 @@ if($param != null || $param != '' || $param != NULL){
         </div>
       </div><!-- END INPUT -->
 
-
     </fieldset>
 
     <fieldset>

@@ -8,26 +8,30 @@ $(document).ready(function () {
 
   $("#createform").validate({
     rules: {
-      empresa_cnpj: {required: true},
+      empresa_cnpj: {required: true, verificaCNPJ: true},
+      empresa_email: {required: true, email: true},
       razao_social: {required: true, minlength: 5}
     },
     messages: {
-      empresa_cnpj: {required: "O CNPJ é obrigatório"},
-      razao_social: {required: "A razão social é obrigatória", minlength:"Informe no mínimo 5 caracteres" }
+      empresa_cnpj: {required: "O CNPJ é obrigatório", verificaCNPJ: "Por favor digite um CNPJ válido"},
+      empresa_email: {required: "O e-mail é obrigatório", email: "Por favor digite um e-mail válido"},
+      razao_social: {required: "A razão social é obrigatória", minlength:"Informe no mínimo 5 caracteres"}
     },
+
     //função para enviar após a validação
-    submitHandler: function(form){
+    submitHandler: function( form ){
 
       $('#return-feedback').hide();
       $('#msg-feedback').html('');
       $('.preload-submit').show();
-      projetouniversal.util.getjson({
-        url: PORTAL_URL+"php/proprietario/salvar-proprietario",
-        data: $(form).serialize(),
-        success: onSuccessSend,
-        error: onError
-      });
-      function onSuccessSend(obj){
+
+      var options = {
+        data: $('#createform').serialize(),
+        type: 'post',
+        url: PORTAL_URL+'php/proprietario/salvar-proprietario',
+        complete: function(obj){
+          //converter o resultado em JSON
+          obj = JSON.parse( obj.responseText );
           switch( $optionsubmit ){
             case '_save':
               /* salvar e voltar para listagem */
@@ -38,6 +42,11 @@ $(document).ready(function () {
               }else if( obj.msg == 'error' ){
                 $('.preload-submit').hide();
                 postToURL(PORTAL_URL+'view/proprietario/index', {error: obj.error, feedback: 'Ocorreu um erro ao realizar a operação', type: 'error'});
+              }else if( obj.msg = 'upload'){
+                $('.preload-submit').hide();
+                $('#return-status').addClass('alert-danger');
+                $('#return-status').html('<i class="glyphicon glyphicon-remove"></i> '+obj.error);
+                $('#return-status').slideDown( 300 ).delay( 5000 ).fadeOut( 800 );
               }
             break;
             case '_continue':
@@ -53,6 +62,11 @@ $(document).ready(function () {
                 $('#return-feedback').addClass('alert-danger');
                 $('#msg-feedback').html('<i class="glyphicon glyphicon-remove"></i>'+obj.error+': Ocorreu um erro ao realizar a operação');
                 $('#return-feedback').slideDown( 300 ).delay( 5000 ).fadeOut( 800 );
+              }else if( obj.msg = 'upload'){
+                $('.preload-submit').hide();
+                $('#return-status').addClass('alert-danger');
+                $('#return-status').html('<i class="glyphicon glyphicon-remove"></i> '+obj.error);
+                $('#return-status').slideDown( 300 ).delay( 5000 ).fadeOut( 800 );
               }
             break;
             case '_addanother':
@@ -74,13 +88,94 @@ $(document).ready(function () {
                 $('#return-feedback').addClass('alert-danger');
                 $('#msg-feedback').html('<i class="glyphicon glyphicon-remove"></i> Ocorreu um erro ao realizar a operação');
                 $('#return-feedback').slideDown( 300 ).delay( 5000 ).fadeOut( 800 );
+              }else if( obj.msg = 'upload'){
+                $('.preload-submit').hide();
+                $('#return-status').addClass('alert-danger');
+                $('#return-status').html('<i class="glyphicon glyphicon-remove"></i> '+obj.error);
+                $('#return-status').slideDown( 300 ).delay( 5000 ).fadeOut( 800 );
               }
             break;
-          }
-        }//end function
-        return false;
-      }
+          }//end switch case
+        },
+        error: function(response){
+          $('#submit-btn').show();
+          $('#submit-loading').hide();
+          $('#alerta-retorno').addClass('alert-danger');
+          $('#alerta-retorno').show();
+          $('#mensagem-retorno').html(response.responseText);
+          //LIMPAR FORMULARIO
+          $('#cadastro_form').resetForm();
+          $('html, body').animate({scrollTop:0}, 'slow');
+        }
+      };
+
+      //ENVIAR DADOS VIA AJAX
+      $('#createform').ajaxSubmit(options);
+
+      return false;
+    }
+
   });
+  //adicionado um metodo no jquery validate para validar o CNPJ
+  jQuery.validator.addMethod("verificaCNPJ", function (cnpj, element) {
+    cnpj = jQuery.trim(cnpj);
+
+    // DEIXA APENAS OS NÚMEROS
+    cnpj = cnpj.replace('/', '');
+    cnpj = cnpj.replace('.', '');
+    cnpj = cnpj.replace('.', '');
+    cnpj = cnpj.replace('-', '');
+
+    var numeros, digitos, soma, i, resultado, pos, tamanho, digitos_iguais;
+    digitos_iguais = 1;
+
+    if (cnpj.length < 14 && cnpj.length < 15) {
+        return this.optional(element) || false;
+    }
+    for (i = 0; i < cnpj.length - 1; i++) {
+        if (cnpj.charAt(i) != cnpj.charAt(i + 1)) {
+            digitos_iguais = 0;
+            break;
+        }
+    }
+
+    if (!digitos_iguais) {
+        tamanho = cnpj.length - 2
+        numeros = cnpj.substring(0, tamanho);
+        digitos = cnpj.substring(tamanho);
+        soma = 0;
+        pos = tamanho - 7;
+
+        for (i = tamanho; i >= 1; i--) {
+            soma += numeros.charAt(tamanho - i) * pos--;
+            if (pos < 2) {
+                pos = 9;
+            }
+        }
+        resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+        if (resultado != digitos.charAt(0)) {
+            return this.optional(element) || false;
+        }
+        tamanho = tamanho + 1;
+        numeros = cnpj.substring(0, tamanho);
+        soma = 0;
+        pos = tamanho - 7;
+        for (i = tamanho; i >= 1; i--) {
+            soma += numeros.charAt(tamanho - i) * pos--;
+            if (pos < 2) {
+                pos = 9;
+            }
+        }
+        resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+        if (resultado != digitos.charAt(1)) {
+            return this.optional(element) || false;
+        }
+        return this.optional(element) || true;
+    } else {
+        return this.optional(element) || false;
+    }
+  }, "Informe um CNPJ válido.");
+
 
   /* enviar e editar */
   $('button#enviarformulario').livequery( "click", function(){
@@ -172,7 +267,5 @@ $(document).ready(function () {
   function onError(args) {
     console.log( 'onError: ' + args );
   }
-
-
 
 });

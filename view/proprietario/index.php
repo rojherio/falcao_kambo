@@ -49,6 +49,7 @@ include('template/header.php');
               <li id="rmv-li-slc" class="disabled"><a id="rmv-item-slc" href="#">Remover selecionados</a></li>
               <li><a id="filtro-item-status" rel="1" href="#">Ativos</a></li>
               <li><a id="filtro-item-status" rel="0" href="#">Inativos</a></li>
+              <li><a id="filtro-item-todos" href="#">Todos</a></li>
             </ul>
           </div>
       </div>
@@ -82,6 +83,9 @@ include('template/header.php');
                 $dadosPesquisa .= isset($_REQUEST['filtrocampo']) && $_REQUEST['filtrocampo'] != '' && $_REQUEST['filtrotipo'] == 'razaosocial' ? " WHERE UPPER(razaosocial) LIKE '%" . strtoupper($_REQUEST['filtrocampo']) . "%'" : '';
                 $dadosPesquisa .= isset($_REQUEST['filtrocampo']) && $_REQUEST['filtrocampo'] != '' && $_REQUEST['filtrotipo'] == 'cnpj' ? " WHERE cnpj LIKE '%" . strtoupper($_REQUEST['filtrocampo']) . "%'" : '';
                 $dadosPesquisa .= isset($_REQUEST['filtrocampo']) && $_REQUEST['filtrocampo'] != '' && $_REQUEST['filtrotipo'] == 'status' ? " WHERE status = " . $_REQUEST['filtrocampo'] . "" : '';
+                if(isset($_REQUEST['filtrocampo']) && $_REQUEST['filtrocampo'] != '' && $_REQUEST['filtrotipo'] == 'todos'){
+                  $dadosPesquisa .= '';
+                }
                 $orderby = " ORDER BY razaosocial ASC";
 
                 //total de paginaçao

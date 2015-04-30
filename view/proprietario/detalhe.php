@@ -65,7 +65,16 @@ if($param != null || $param != '' || $param != NULL){
       <h3 class="modal-title">Empresa</h3>
   </div>
   <div class="modal-body">
-
+      <div>
+        <div>
+          <?
+          $pasta = "upload/empresa/";
+          $foto = isset($empresa_logo) ? ($empresa_logo != '' ? $empresa_logo : "icon-user-default.png") : "icon-user-default.png";
+          ?>
+          <img class="img-responsive col-sm-offset-5" alt="logo" src="<?=PORTAL_URL.$pasta.$foto?>" width="82" heigth="82">
+        </div>
+      </div>
+      <br/>
       <fieldset class="clear">
       <div class="section">Informações básicas</div>
           <div class="row">

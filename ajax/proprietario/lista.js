@@ -71,6 +71,12 @@ $(document).ready(function(){
     postToURL(PORTAL_URL+'view/proprietario/index', {filtrotipo: $filtrotipo, filtrocampo: $filtrocampo});
   });
 
+  $('a#filtro-item-todos').livequery( "click", function(){
+    $filtrotipo   = 'todos';
+    $filtrocampo  = $(this).attr('rel');
+    postToURL(PORTAL_URL+'view/proprietario/index', {filtrotipo: $filtrotipo, filtrocampo: $filtrocampo});
+  });
+
   /* erro do envio ajax */
   function onError(args) {
     console.log( 'onError: ' + args );

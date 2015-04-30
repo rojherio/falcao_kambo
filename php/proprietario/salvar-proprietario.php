@@ -65,29 +65,49 @@ try {
 
   if($idempresa != 0){//inicio if alterar
 
-
-
-    $stmt = $oConexao->prepare("UPDATE ava_proprietario SET cnpj = ?, razaosocial = ?, inscricaoestadual = ?, nomefantasia = ?, logo = ?, email = ?, telefone = ?, celular = ?, sms = ?, nomeresponsavel = ?, cep = ?, logradouro = ?, numero = ?, complemento = ?, bairro = ?, cidade = ?, idestado = ?, idpais = ? WHERE id = ?");
-    $stmt->bindValue(1, $empresa_cnpj);
-    $stmt->bindValue(2, $razao_social);
-    $stmt->bindValue(3, $inscricao_estadual);
-    $stmt->bindValue(4, $nome_fantasia);
-    $stmt->bindValue(5, $foto);
-    $stmt->bindValue(6, $empresa_email);
-    $stmt->bindValue(7, $empresa_telefone);
-    $stmt->bindValue(8, $empresa_celular);
-    $stmt->bindValue(9, $empresa_sms);
-    $stmt->bindValue(10, $nome_responsavel);
-    $stmt->bindValue(11, $empresa_cep);
-    $stmt->bindValue(12, $empresa_logradouro);
-    $stmt->bindValue(13, $empresa_numero);
-    $stmt->bindValue(14, $empresa_complemento);
-    $stmt->bindValue(15, $empresa_bairro);
-    $stmt->bindValue(16, $empresa_cidade);
-    $stmt->bindValue(17, $empresa_estado);
-    $stmt->bindValue(18, $empresa_pais);
-    $stmt->bindValue(19, $idempresa);
-
+    //verifica se foi enviado algum arquivo, caso tenha enviado o arquivo altera a logo no banco
+    if(isset($_FILES["empresa_logo"])){
+      $stmt = $oConexao->prepare("UPDATE ava_proprietario SET cnpj = ?, razaosocial = ?, inscricaoestadual = ?, nomefantasia = ?, logo = ?, email = ?, telefone = ?, celular = ?, sms = ?, nomeresponsavel = ?, cep = ?, logradouro = ?, numero = ?, complemento = ?, bairro = ?, cidade = ?, idestado = ?, idpais = ? WHERE id = ?");
+      $stmt->bindValue(1, $empresa_cnpj);
+      $stmt->bindValue(2, $razao_social);
+      $stmt->bindValue(3, $inscricao_estadual);
+      $stmt->bindValue(4, $nome_fantasia);
+      $stmt->bindValue(5, $foto);
+      $stmt->bindValue(6, $empresa_email);
+      $stmt->bindValue(7, $empresa_telefone);
+      $stmt->bindValue(8, $empresa_celular);
+      $stmt->bindValue(9, $empresa_sms);
+      $stmt->bindValue(10, $nome_responsavel);
+      $stmt->bindValue(11, $empresa_cep);
+      $stmt->bindValue(12, $empresa_logradouro);
+      $stmt->bindValue(13, $empresa_numero);
+      $stmt->bindValue(14, $empresa_complemento);
+      $stmt->bindValue(15, $empresa_bairro);
+      $stmt->bindValue(16, $empresa_cidade);
+      $stmt->bindValue(17, $empresa_estado);
+      $stmt->bindValue(18, $empresa_pais);
+      $stmt->bindValue(19, $idempresa);
+    } else { // altera os dados da empresa sem alterar a logo
+      $stmt = $oConexao->prepare("UPDATE ava_proprietario SET cnpj = ?, razaosocial = ?, inscricaoestadual = ?, nomefantasia = ?, email = ?, telefone = ?, celular = ?, sms = ?, nomeresponsavel = ?, cep = ?, logradouro = ?, numero = ?, complemento = ?, bairro = ?, cidade = ?, idestado = ?, idpais = ? WHERE id = ?");
+      $stmt->bindValue(1, $empresa_cnpj);
+      $stmt->bindValue(2, $razao_social);
+      $stmt->bindValue(3, $inscricao_estadual);
+      $stmt->bindValue(4, $nome_fantasia);
+      $stmt->bindValue(5, $empresa_email);
+      $stmt->bindValue(6, $empresa_telefone);
+      $stmt->bindValue(7, $empresa_celular);
+      $stmt->bindValue(8, $empresa_sms);
+      $stmt->bindValue(9, $nome_responsavel);
+      $stmt->bindValue(10, $empresa_cep);
+      $stmt->bindValue(11, $empresa_logradouro);
+      $stmt->bindValue(12, $empresa_numero);
+      $stmt->bindValue(13, $empresa_complemento);
+      $stmt->bindValue(14, $empresa_bairro);
+      $stmt->bindValue(15, $empresa_cidade);
+      $stmt->bindValue(16, $empresa_estado);
+      $stmt->bindValue(17, $empresa_pais);
+      $stmt->bindValue(18, $idempresa);
+    }
     $stmt->execute();
 
     $oConexao->commit();
