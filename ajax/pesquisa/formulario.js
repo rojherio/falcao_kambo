@@ -1,7 +1,7 @@
 $(document).ready(function() {
 
   //carrega nova pergunta no formulário ----------------------------------------------------------
-  $('button#add_pergunta').livequery("click", function(){
+  function adiciona_pergunta(){
     var count = $('input#count_pergunta_inc').val();
     var count_p = Number(count)+(1);
     $('div#div_perguntas').append('<div id="div_pergunta_'+count_p+'" class="div_pergunta" contador="'+count_p+'"></div>');
@@ -9,6 +9,9 @@ $(document).ready(function() {
     $('input#count_pergunta_inc').val(count_p);
     carrega_tipo_opcao(count_p);
     renumera_pergunta();
+  }
+  $('button#add_pergunta').livequery("click", function(){
+    adiciona_pergunta();
     return false;
   });
 
@@ -47,67 +50,72 @@ $(document).ready(function() {
 //---------------------------------------------------------------------------------------------------------------------------
 
   //alterar opcoes da pergunta baseado no tipo de opcao da pergunta--------------------------------
-	$('select#pergunta_tipo_opcao').livequery("change", function(){
-    
-    var contador = $(this).parents('div.div_pergunta').attr('contador');
+	function carrega_opcao(obj){
+    var contador = $(obj).parents('div.div_pergunta').attr('contador');
 
-    clean_pergunta_opcao($(this));
+    clean_pergunta_opcao($(obj));
 
-		if ($(this).val() == 1) {
-			$(this).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_texto').html(opcao_texto(contador));
-		} else if ($(this).val() == 2) {
-			$(this).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_paragrafo').html(opcao_paragrafo(contador));
-		} else if ($(this).val() == 3) {
-			$(this).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_multipla_escolha').html(opcao_multipla_escolha(contador)).append(button_add_opcao());
-		} else if ($(this).val() == 4) {
-			$(this).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_caixa_selecao').html(opcao_caixa_selecao(contador)).append(button_add_opcao());
-		} else if ($(this).val() == 5) {
-			$(this).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_lista').html(opcao_lista(contador)).append(button_add_opcao());
-		} else if ($(this).val() == 6) {
-			$(this).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_escala_numero').html(opcao_escala_numero(contador));
-		} else if ($(this).val() == 7) {
-			$(this).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_escala_estrela').html(opcao_escala_estrela(contador));
-		} else if ($(this).val() == 8) {
-			$(this).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_escala_rosto').html(opcao_escala_rosto(contador));
-		} else if ($(this).val() == 9) {
-      $(this).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_grade_linha').html(opcao_grade_linha(contador, 1));
-      $(this).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_grade_linha').append(opcao_grade_linha(contador, 2)).append(button_add_opcao());
-      $(this).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_grade_coluna').html(opcao_grade_coluna(contador, 1));
-			$(this).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_grade_coluna').append(opcao_grade_coluna(contador, 2)).append(button_add_opcao());
-		} else if ($(this).val() == 10) {
-			$(this).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_data').html(opcao_data(contador));
-		} else if ($(this).val() == 11) {
-			$(this).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_horario').html(opcao_horario(contador));
-		} else if ($(this).val() == 12) {
-			$(this).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_curtir').html(opcao_curtir(contador));
-		}
+    if ($(obj).val() == 1) {
+      $(obj).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_texto').html(opcao_texto(contador));
+    } else if ($(obj).val() == 2) {
+      $(obj).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_paragrafo').html(opcao_paragrafo(contador));
+    } else if ($(obj).val() == 3) {
+      $(obj).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_multipla_escolha').html(opcao_multipla_escolha(contador)).append(button_add_opcao());
+    } else if ($(obj).val() == 4) {
+      $(obj).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_caixa_selecao').html(opcao_caixa_selecao(contador)).append(button_add_opcao());
+    } else if ($(obj).val() == 5) {
+      $(obj).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_lista').html(opcao_lista(contador)).append(button_add_opcao());
+    } else if ($(obj).val() == 6) {
+      $(obj).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_escala_numero').html(opcao_escala_numero(contador));
+    } else if ($(obj).val() == 7) {
+      $(obj).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_escala_estrela').html(opcao_escala_estrela(contador));
+    } else if ($(obj).val() == 8) {
+      $(obj).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_escala_rosto').html(opcao_escala_rosto(contador));
+    } else if ($(obj).val() == 9) {
+      $(obj).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_grade_linha').html(opcao_grade_linha(contador, 1));
+      $(obj).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_grade_linha').append(opcao_grade_linha(contador, 2)).append(button_add_opcao());
+      $(obj).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_grade_coluna').html(opcao_grade_coluna(contador, 1));
+      $(obj).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_grade_coluna').append(opcao_grade_coluna(contador, 2)).append(button_add_opcao());
+    } else if ($(obj).val() == 10) {
+      $(obj).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_data').html(opcao_data(contador));
+    } else if ($(obj).val() == 11) {
+      $(obj).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_horario').html(opcao_horario(contador));
+    } else if ($(obj).val() == 12) {
+      $(obj).parents('div#div_pergunta_'+contador).find('#div_op').find('#div_op_curtir').html(opcao_curtir(contador));
+    }
+  }
+  $('select#pergunta_tipo_opcao').livequery("change", function(){
+    carrega_opcao($(this));   
 		return false;
 	});
 
 //---------------------------------------------------------------------------------------------------------------------------
   
   //OPCAO NAS PERGUNTAS --------------------------------------------------------
-  //add uma nova opcão opcao na pergunta multipla_escolha ----------------------------------------------------------
-  $('button#add_opcao').livequery('click', function(){
-    var contador = $(this).parents('div.div_pergunta').attr('contador');
-    var tipo = $(this).parents('div.div_op').attr('id');
+  //add uma nova opcão opcao na pergunta ----------------------------------------------------------
+  function adiciona_opcao(obj){
+    var contador = $(obj).parents('div.div_pergunta').attr('contador');
+    var tipo = $(obj).parents('div.div_op').attr('id');
     if(tipo == 'div_op_multipla_escolha'){
-      $(this).parents('div#div_add_opcao').before(opcao_multipla_escolha(contador));
+      $(obj).parents('div#div_add_opcao').before(opcao_multipla_escolha(contador));
     }else if(tipo == 'div_op_caixa_selecao'){
-      $(this).parents('div#div_add_opcao').before(opcao_caixa_selecao(contador));
+      $(obj).parents('div#div_add_opcao').before(opcao_caixa_selecao(contador));
     }else if(tipo == 'div_op_lista'){
-      $(this).parents('div#div_add_opcao').before(opcao_lista(contador));
+      $(obj).parents('div#div_add_opcao').before(opcao_lista(contador));
     }else if(tipo == 'div_op_grade_linha'){
-      $(this).parents('div#div_add_opcao:first').before(opcao_grade_linha(contador));
+      $(obj).parents('div#div_add_opcao:first').before(opcao_grade_linha(contador));
       renumera_opcao_grade_linha(contador);
     }else if(tipo == 'div_op_grade_coluna'){
-      $(this).parents('div#div_add_opcao:last').before(opcao_grade_coluna(contador));
+      $(obj).parents('div#div_add_opcao:last').before(opcao_grade_coluna(contador));
       renumera_opcao_grade_coluna(contador);
     }
+  }
+  $('button#add_opcao').livequery('click', function(){
+    adiciona_opcao($(this));
     return false;
   });
 
-  //remove uma opcao na pergunta caixa_selecao ----------------------------------------------------------
+  //remove uma opcao na pergunta ----------------------------------------------------------
   $('button#remove_opcao').livequery('click', function(){
     var tipo = $(this).parents('div.div_op').attr('id');
     var obj_div = $(this).parents('div.div_op');
@@ -329,6 +337,7 @@ $(document).ready(function() {
   function opcao_texto(key){
   	var retorno = '';
     retorno += '<div id="div_opcao_row">';
+    retorno += '  <input type="hidden" id="'+key+'_op_id" name="'+key+'_op_id" value="0">';
     retorno += '  <input type="text" id="'+key+'_op_texto" readonly="true" disabled="" placeholder="A resposta deles" value="">';
     retorno += '</div>';
   	return retorno;
@@ -337,6 +346,7 @@ $(document).ready(function() {
   function opcao_paragrafo(key){
     var retorno = '';
     retorno += '<div id="div_opcao_row">';
+    retorno += '  <input type="hidden" id="'+key+'_op_id" name="'+key+'_op_id" value="0">';
     retorno += '  <textarea id="'+key+'_op_paragrafo" readonly="true" disabled="" placeholder="A resposta mais longa deles" value=""></textarea>';
     retorno += '</div>';
     return retorno;
@@ -345,6 +355,7 @@ $(document).ready(function() {
   function opcao_multipla_escolha(key){
     var retorno = '';
     retorno += '<div id="div_opcao_row">';
+    retorno += '  <input type="hidden" id="'+key+'_op_id" name="'+key+'_op_id" value="0">';
     retorno += '  <input type="radio" readonly="true" disabled="" value="">';
     retorno += '  <input type="text" id="'+key+'_op_multipla_escolha" class="op_multipla_escolha" name="'+key+'_op_multipla_escolha[]" value="">';
     retorno += '  <button id="remove_opcao">X</button><br/>';
@@ -355,6 +366,7 @@ $(document).ready(function() {
   function opcao_caixa_selecao(key){
     var retorno = '';
     retorno += '<div id="div_opcao_row">';
+    retorno += '  <input type="hidden" id="'+key+'_op_id" name="'+key+'_op_id" value="0">';
     retorno += '  <input type="checkbox" readonly="true" disabled="" value="">';
     retorno += '  <input type="text" id="'+key+'_op_caixa_selecao" class="op_caixa_selecao" name="'+key+'_op_caixa_selecao[]" value="">';
     retorno += '  <button id="remove_opcao">X</button><br/>';
@@ -365,6 +377,7 @@ $(document).ready(function() {
   function opcao_lista(key){
     var retorno = '';
     retorno += '<div id="div_opcao_row">';
+    retorno += '  <input type="hidden" id="'+key+'_op_id" name="'+key+'_op_id" value="0">';
     retorno += '  <input type="text" id="'+key+'_op_lista" class="op_lista" name="'+key+'_op_lista[]" value="">';
     retorno += '  <button id="remove_opcao">X</button><br/>';
     retorno += '</div>';
@@ -375,13 +388,15 @@ $(document).ready(function() {
     var retorno = '';
     retorno += '<div id="div_opcao_row">';
     retorno += '  <label>De&nbsp;';
-    retorno += '    <select id="'+key+'_op_escala_numero" name="'+key+'_op_escala_numero[]">';
+    retorno += '    <input type="hidden" id="'+key+'_op_id" name="'+key+'_op_id" value="0">';
+    retorno += '    <select id="'+key+'_op_escala_numero_ini" name="'+key+'_op_escala_numero[]">';
     retorno += '      <option value="0">0</option>';
     retorno += '      <option selected="" value="1">1</option>';
     retorno += '    </select>';
     retorno += '  </label>';
     retorno += '  <label>Até&nbsp;';
-    retorno += '    <select id="'+key+'_op_escala_numero" name="'+key+'_op_escala_numero[]">';
+    retorno += '    <input type="hidden" id="'+key+'_op_id" name="'+key+'_op_id" value="0">';
+    retorno += '    <select id="'+key+'_op_escala_numero_fim" name="'+key+'_op_escala_numero[]">';
     retorno += '      <option value="2">2</option>';
     retorno += '      <option value="3">3</option>';
     retorno += '      <option value="4">4</option>';
@@ -400,6 +415,7 @@ $(document).ready(function() {
   function opcao_escala_estrela(key){
     var retorno = '';
     retorno += '<div id="div_opcao_row">';
+    retorno += '  <input type="hidden" id="'+key+'_op_id" name="'+key+'_op_id" value="0">';
     retorno += 'estrelas <br/>';
     retorno += '</div>';
     return retorno;
@@ -408,6 +424,7 @@ $(document).ready(function() {
   function opcao_escala_rosto(key){
     var retorno = '';
     retorno += '<div id="div_opcao_row">';
+    retorno += '  <input type="hidden" id="'+key+'_op_id" name="'+key+'_op_id" value="0">';
     retorno += 'rostos <br/>';
     retorno += '</div>';
     return retorno;
@@ -417,6 +434,7 @@ $(document).ready(function() {
     var retorno = '';
     retorno += '<div id="div_opcao_row">';
     retorno += '  <label id="label_op_grade_linha">';
+    retorno += '    <input type="hidden" id="'+key+'_op_id" name="'+key+'_op_id" value="0">';
     retorno += '    <span>Marcador da Linha '+keyLine+'&nbsp;</span>';
     retorno += '    <input type="text" id="'+key+'_op_grade_linha" class="op_grade_linha"  name="'+key+'_op_grade_linha[]" value="">';
     retorno += '  </label>';
@@ -429,6 +447,7 @@ $(document).ready(function() {
     var retorno = '';
     retorno += '<div id="div_opcao_row">';
     retorno += '  <label id="label_op_grade_coluna">';
+    retorno += '    <input type="hidden" id="'+key+'_op_id" name="'+key+'_op_id" value="0">';
     retorno += '    <span>Marcador da Coluna '+keyColumn+'&nbsp;</span>';
     retorno += '    <input type="text" id="'+key+'_op_grade_coluna" class="op_grade_coluna"  name="'+key+'_op_grade_coluna[]" value="">';
     retorno += '  </label>';
@@ -440,6 +459,7 @@ $(document).ready(function() {
   function opcao_data(key){
     var retorno = '';
     retorno += '<div id="div_opcao_row">';
+    retorno += '  <input type="hidden" id="'+key+'_op_id" name="'+key+'_op_id" value="0">';
     retorno += 'Data <br/>';
     retorno += '</div>';
     return retorno;
@@ -448,6 +468,7 @@ $(document).ready(function() {
   function opcao_horario(key){
     var retorno = '';
     retorno += '<div id="div_opcao_row">';
+    retorno += '  <input type="hidden" id="'+key+'_op_id" name="'+key+'_op_id" value="0">';
     retorno += 'horario <br/>';
     retorno += '</div>';
     return retorno;
@@ -456,6 +477,7 @@ $(document).ready(function() {
   function opcao_curtir(key){
     var retorno = '';
     retorno += '<div id="div_opcao_row">';
+    retorno += '  <input type="hidden" id="'+key+'_op_id" name="'+key+'_op_id" value="0">';
     retorno += 'curtir <br/>';
     retorno += '</div>';
     return retorno;
@@ -637,11 +659,107 @@ $(document).ready(function() {
   //   return false;
   // });
 
-  //carrega primeira pergunta no formulário ----------------------------------------------------------
-  var count_p = ($('div#div_perguntas').find("div.div_pergunta").size());
-  if(count_p == 0){
-    $('button#add_pergunta').click();
+
+//---------------------------------------------------------------------------------------------------------------------------
+
+  //MODO EDIÇAO ----------------------------------------------------------
+  if(perguntas.length > 0){
+
+    $.each(perguntas, function(key, value){
+
+      adiciona_pergunta();
+      $('div#div_pergunta_'+key).find('input#pergunta_id').val(value['perguntaId']);
+      $('div#div_pergunta_'+key).find('input#pergunta_status').val(value['perguntaStatus']);
+      $('div#div_pergunta_'+key).find('input#pergunta_titulo').val(value['perguntaTitulo']);
+      $('div#div_pergunta_'+key).find('input#pergunta_texto_ajuda').val(value['perguntaTextoAjuda']);
+      $('div#div_pergunta_'+key).find('select#pergunta_tipo_opcao').val(value['perguntaTipoOpcao']);
+      $('div#div_pergunta_'+key).find('input#pergunta_redireciona').prop('checked', (value['perguntaRedireciona'] == 0 ? false : true));
+      $('div#div_pergunta_'+key).find('input#pergunta_obrigatoria').prop('checked', (value['perguntaObrigatoria'] == 0 ? false : true));
+      var perg_tp_op = $('div#div_pergunta_'+key).find('select#pergunta_tipo_opcao');
+
+      carrega_opcao(perg_tp_op);
+
+      if(value['perguntaTipoOpcao'] == 1 ||  value['perguntaTipoOpcao'] == 2){
+
+        $('div#div_pergunta_'+key).find('input#'+key+'_op_id').val(value['opcoes']['opcaoId']);
+
+      }else if(value['perguntaTipoOpcao'] == 3){
+
+        $.each(value['opcoes'], function(kOp, vOp){
+          $('div#div_pergunta_'+key).find('input#'+key+'_op_id:last').val(vOp['opcaoId']);
+          $('div#div_pergunta_'+key).find('input#'+key+'_op_multipla_escolha:last').val(vOp['opcaoResposta']);
+          var btn_add_op = $('div#div_pergunta_'+key).find('button#add_opcao');
+          if(kOp < (value['opcoes'].length - 1)){
+            adiciona_opcao(btn_add_op);
+          }
+        });
+
+      }else if(value['perguntaTipoOpcao'] == 4){
+
+        $.each(value['opcoes'], function(kOp, vOp){
+          $('div#div_pergunta_'+key).find('input#'+key+'_op_id:last').val(vOp['opcaoId']);
+          $('div#div_pergunta_'+key).find('input#'+key+'_op_caixa_selecao:last').val(vOp['opcaoResposta']);
+          var btn_add_op = $('div#div_pergunta_'+key).find('button#add_opcao');
+          if(kOp < (value['opcoes'].length - 1)){
+            adiciona_opcao(btn_add_op);
+          }
+        });
+
+      }else if(value['perguntaTipoOpcao'] == 5){
+
+        $.each(value['opcoes'], function(kOp, vOp){
+          $('div#div_pergunta_'+key).find('input#'+key+'_op_id:last').val(vOp['opcaoId']);
+          $('div#div_pergunta_'+key).find('input#'+key+'_op_lista:last').val(vOp['opcaoResposta']);
+          var btn_add_op = $('div#div_pergunta_'+key).find('button#add_opcao');
+          if(kOp < (value['opcoes'].length - 1)){
+            adiciona_opcao(btn_add_op);
+          }
+        });
+
+      }else if(value['perguntaTipoOpcao'] == 6){
+
+        var op_aux = value['opcoes'][0]['opcaoResposta'];
+        $('div#div_pergunta_'+key).find('select#'+key+'_op_escala_numero_ini option[value="'+op_aux+'"]').prop('selected', 'selected');
+        op_aux = value['opcoes'].length - 1;
+        $('div#div_pergunta_'+key).find('select#'+key+'_op_escala_numero_fim option[value="'+op_aux+'"]').prop('selected', 'selected');
+
+      }else if(value['perguntaTipoOpcao'] == 9){
+
+        $.each(value['gradeLinhas'], function(kOp, vOp){
+          var op_div_row = kOp <= 0 ? 'first' : 'last';
+          $('div#div_pergunta_'+key).find('div#div_op_grade_linha').find('input#'+key+'_op_id:'+op_div_row).val(vOp['gradeLinhaId']);
+          $('div#div_pergunta_'+key).find('div#div_op_grade_linha').find('input#'+key+'_op_grade_linha:'+op_div_row).val(vOp['gradeLinhaTitulo']);
+          var btn_add_op = $('div#div_pergunta_'+key).find('button#add_opcao:first');
+          if(kOp < (value['gradeLinhas'].length - 1) && kOp >= 1){
+            adiciona_opcao(btn_add_op);
+          }
+        });
+
+        $.each(value['opcoes'], function(kOp, vOp){
+          var op_div_row = kOp <= 0 ? 'first' : 'last';
+          // $('div#div_pergunta_'+key).find('div:last').find('input#'+key+'_op_id:last').val(vOp['opcaoId']);
+          $('div#div_pergunta_'+key).find('div#div_op_grade_coluna').find('input#'+key+'_op_grade_coluna:'+op_div_row).val(vOp['opcaoResposta']);
+          var btn_add_op = $('div#div_pergunta_'+key).find('button#add_opcao:last');
+          if(kOp < (value['opcoes'].length - 1) && kOp >= 1){
+            adiciona_opcao(btn_add_op);
+          }
+        });
+
+      } 
+
+    });
+
+  }else{
+
+    var count_p = ($('div#div_perguntas').find("div.div_pergunta").size());
+    if(count_p == 0){
+      $('button#add_pergunta').click();
+    }
+
   }
+
+//---------------------------------------------------------------------------------------------------------------------------
+  //carrega primeira pergunta no formulário ----------------------------------------------------------
 
   //onError --------------------------------------------------------------------------------------
   function onError(args) {

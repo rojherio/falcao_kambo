@@ -14,7 +14,7 @@
 
   $conn = Conexao::getInstance();
 
-	$stmt = $conn->prepare("SELECT id, nome FROM ava_tipo_opcao ");
+	$stmt = $conn->prepare("SELECT id, nome FROM ava_tipo_opcao WHERE status = 1");
 	$stmt->execute();
 	$resultTipoOpcao = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -25,6 +25,9 @@
 	$descricao										= "";
 	$status												= 0;
 	$proprietarioId								= 0;
+	$periodo_inicio 							= "";
+	$periodo_fim									= "";
+	$qtd_pergunta_pagina					= "";
 
 	$perguntas 										= array();
 
@@ -33,7 +36,7 @@
 	  $id = $param;
 	  
 	  //carrega dados da pequisa
-		$stmt = $conn->prepare("SELECT id, titulo, descricao, link, status, data_cadastro, proprietario_id 
+		$stmt = $conn->prepare("SELECT id, titulo, descricao, link, status, data_cadastro, proprietario_id, periodo_inicio, periodo_fim, qtd_pergunta_pagina 
 														FROM ava_pesquisa 
 														WHERE id = :id");
 		$stmt->bindValue(":id", $id);
@@ -49,11 +52,14 @@
 			$descricao										= $rs[0]["descricao"];
 			$status												= $rs[0]["status"];
 			$proprietarioId								= $rs[0]["proprietario_id"];
+			$periodo_inicio 							= $rs[0]["periodo_fim"];
+			$periodo_fim									= $rs[0]["periodo_fim"];
+			$qtd_pergunta_pagina					= $rs[0]["qtd_pergunta_pagina"];
 
 			//carrega dados das perguntas da pesquisa
 			$stmt = $conn->prepare("SELECT id, titulo, texto_ajuda, obrigatoria, redireciona, status, tipo_opcao_id 
 															FROM ava_pergunta 
-															WHERE pesquisa_id = :id");
+															WHERE pesquisa_id = :id AND status = 1"); //status 1 = ativo
 			$stmt->bindValue(":id", $id);
 			$stmt->execute();
 			$rsPergunta = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -71,29 +77,81 @@
 				$pergunta["perguntaTipoOpcao"] 						= $vPergunta["tipo_opcao_id"];
 
 				$pergunta["opcoes"]												= array(); //variavel que ira armazenar as opcoes de cada pergunta
+				$pergunta["gradeLinhas"]									= array(); //variavel que ira armazenar as linhas da grade de cada pergunta do tipo grade
 
-				//carrega oçoes das perguntas da pesquisa
-				$stmt = $conn->prepare("SELECT id, resposta, valor, direcao, tipo, controle, opcao_pai_id 
-												FROM ava_opcao 
-												WHERE pergunta_id = :pergunta_id");
-				$stmt->bindValue(":pergunta_id", $vPergunta["id"]);
-				$stmt->execute();
-				$rsOpcao = $stmt->fetchAll(PDO::FETCH_ASSOC);
+				if ($pergunta["perguntaTipoOpcao"] == 9) {
 
-				//varre o ResultSet de opcoes para preencer os campos em modo de edicao
-				foreach($rsOpcao as $kOpcao => $vOpcao){
+					//carrega grade linha das perguntas tipo grade da pesquisa
+					$stmt = $conn->prepare("SELECT id, titulo, status 
+																	FROM ava_grade_linha 
+																	WHERE pergunta_id = :pergunta_id AND status = 1"); //status 1 = ativo
+					$stmt->bindValue(":pergunta_id", $vPergunta["id"]);
+					$stmt->execute();
+					$rsGradeLinha = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-					$opcao 																		= array();
-					$opcao["id"]															=$vOpcao['id'];
-					$opcao["resposta"]												=$vOpcao['resposta'];
-					$opcao["valor"]														=$vOpcao['valor'];
-					$opcao["direcao"]													=$vOpcao['direcao'];
-					$opcao["tipo"]														=$vOpcao['tipo'];
-					$opcao["controle"]												=$vOpcao['controle'];
-					$opcao["pergunta_id"]											=$vPergunta['id'];
-					$opcao["opcao_pai_id"]										=$vOpcao['opcao_pai_id'];
+					//varre o ResultSet de opcoes para preencer os campos em modo de edicao
+					foreach($rsGradeLinha as $kGradeLinha => $vGradeLinha){
 
-					array_push($pergunta['opcoes'], $opcao);
+						$gradeLinha 															= array();
+						$gradeLinha["gradeLinhaId"]										=$vGradeLinha['id'];
+						$gradeLinha["gradeLinhaTitulo"]								=$vGradeLinha['titulo'];
+						$gradeLinha["gradeLinhaStatus"]								=$vGradeLinha['status'];
+
+						array_push($pergunta['gradeLinhas'], $gradeLinha);
+
+					}
+
+					//carrega oçoes das perguntas da pesquisa
+					$stmt = $conn->prepare("SELECT resposta, valor, direcao, tipo, controle, status 
+																	FROM ava_opcao 
+																	WHERE pergunta_id = :pergunta_id AND status = 1
+																	GROUP BY resposta, valor, direcao, tipo, controle, status"); // status 1 = ativo
+					$stmt->bindValue(":pergunta_id", $vPergunta["id"]);
+					$stmt->execute();
+					$rsOpcao = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+					//varre o ResultSet de opcoes para preencer os campos em modo de edicao
+					foreach($rsOpcao as $kOpcao => $vOpcao){
+
+						$opcao 																		= array();
+						$opcao["opcaoResposta"]										=$vOpcao['resposta'];
+						$opcao["opcaoValor"]											=$vOpcao['valor'];
+						$opcao["opcaoDirecao"]										=$vOpcao['direcao'];
+						$opcao["opcaoTipo"]												=$vOpcao['tipo'];
+						$opcao["opcaoControle"]										=$vOpcao['controle'];
+						$opcao["opcaoPerguntaId"]									=$vPergunta['id'];
+						$opcao["opcaoStatus"]											=$vOpcao['status'];
+
+						array_push($pergunta['opcoes'], $opcao);
+
+					}
+
+				}else{
+
+					//carrega oçoes das perguntas da pesquisa
+					$stmt = $conn->prepare("SELECT id, resposta, valor, direcao, tipo, controle, status 
+																	FROM ava_opcao 
+																	WHERE pergunta_id = :pergunta_id AND status = 1"); // status 1 = ativo
+					$stmt->bindValue(":pergunta_id", $vPergunta["id"]);
+					$stmt->execute();
+					$rsOpcao = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+					//varre o ResultSet de opcoes para preencer os campos em modo de edicao
+					foreach($rsOpcao as $kOpcao => $vOpcao){
+
+						$opcao 																		= array();
+						$opcao["opcaoId"]													=$vOpcao['id'];
+						$opcao["opcaoResposta"]										=$vOpcao['resposta'];
+						$opcao["opcaoValor"]											=$vOpcao['valor'];
+						$opcao["opcaoDirecao"]										=$vOpcao['direcao'];
+						$opcao["opcaoTipo"]												=$vOpcao['tipo'];
+						$opcao["opcaoControle"]										=$vOpcao['controle'];
+						$opcao["opcaoPerguntaId"]									=$vPergunta['id'];
+						$opcao["opcaoStatus"]											=$vOpcao['status'];
+
+						array_push($pergunta['opcoes'], $opcao);
+
+					}
 
 				}
 
@@ -109,12 +167,13 @@
 <!-- JAVASCRIPT -->
 <script type="text/javascript">
 	var resultTipoOpcao = <?=json_encode($resultTipoOpcao);?>;
+	var perguntas = <?=json_encode($perguntas);?>;
 </script>
 
 <form action="javascript;" method="POST" id="form_pesquisa" name="form_pesquisa">
 
 	<input type="hidden" id="proprietario_id" name="proprietario_id" value="1">
-	<input type="hidden" id="status" name="status" value="1">
+	<input type="hidden" id="status" name="status" value="<?=$status?>">
 
 	<h2>Cadastro de Pesquisa</h2>
 
@@ -127,6 +186,20 @@
 
 	<label>Descrição
 		<input type="text" id="titulo" name="descricao" placeholder="Informe a descrição" value="<?=$descricao?>"/>
+	</label><br/>
+
+	<label>Período de Publicação</label><br/>
+
+	<label>De
+		<input type="text" id="periodo_inicio" name="periodo_inicio" placeholder="Ilimitado" value="<?=$periodo_inicio?>"/>&nbsp;
+	</label>
+	
+	<label>Até
+		<input type="text" id="periodo_fim" name="periodo_fim" placeholder="Ilimitado" value="<?=$periodo_fim?>"/>
+	</label><br/>
+
+	<label>Quantidade de perguntas por página
+		<input type="text" id="qtd_pergunta_pagina" name="qtd_pergunta_pagina" placeholder="" value="<?=$qtd_pergunta_pagina?>"/>
 	</label><br/>
 
 	<hr>

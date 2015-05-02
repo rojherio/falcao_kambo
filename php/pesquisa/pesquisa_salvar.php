@@ -10,6 +10,9 @@ include_once('conf/config.php');
 	$descricao										= strip_tags($_POST['descricao']);
 	$status												= strip_tags($_POST['status']);
 	$proprietarioId								= strip_tags($_POST['proprietario_id']);
+	$periodoInicio								= strip_tags($_POST['periodo_inicio']);
+	$periodoFim										= strip_tags($_POST['periodo_fim']);
+	$qtdPerguntaPagina						= strip_tags($_POST['qtd_pergunta_pagina']);
 
 	$perguntaId										= $_POST['pergunta_id'];
 	$perguntaOrdem								= $_POST['pergunta_ordem'];
@@ -33,8 +36,10 @@ include_once('conf/config.php');
 
 	$conn->beginTransaction();
 
-	// $return['msg'] = "";
-	// echo json_encode($return);
+	// $returnJson['teste'] = $_POST['5_op_escala_numero'];
+	// $returnJson['teste1'] = $_POST['5_op_escala_numero'][0];
+	// $returnJson['teste2'] = $_POST['5_op_escala_numero_fim'][1];
+	// echo json_encode($returnJson);
 	// die();
 	// exit();
 
@@ -66,18 +71,20 @@ ava_tipo_opcao
 
 		if($id == 0){
 
-			$stmt = $conn->prepare("INSERT INTO ava_pesquisa (titulo, descricao, status, data_cadastro, proprietario_id) 
-																VALUES (:titulo, :descricao, :status, NOW(), :proprietario_id)");
+			$stmt = $conn->prepare("INSERT INTO ava_pesquisa (titulo, descricao, status, data_cadastro, proprietario_id, periodo_inicio, periodo_fim, qtd_pergunta_pagina ) 
+																VALUES (:titulo, :descricao, :status, NOW(), :proprietario_id, :periodo_inicio, :periodo_fim, :qtd_pergunta_pagina)");
 			$stmt->bindValue(":titulo", $titulo);
 			$stmt->bindValue(":descricao", $descricao);
 			$stmt->bindValue(":status", $status);
 			$stmt->bindValue(":proprietario_id", $proprietarioId);
+			$stmt->bindValue(":periodo_inicio", $periodoInicio);
+			$stmt->bindValue(":periodo_fim", $periodoFim);
+			$stmt->bindValue(":qtd_pergunta_pagina", $qtdPerguntaPagina);
 			$stmt->execute();
 
 			$idNew = $conn->lastInsertId();
 			
 			foreach ($perguntaOrdem as $key => $value) {
-
 				$stmt = $conn->prepare("INSERT INTO ava_pergunta (titulo, texto_ajuda, obrigatoria, redireciona, status, data_cadastro, pesquisa_id, tipo_opcao_id) 
 																	VALUES (:titulo, :texto_ajuda, :obrigatoria, :redireciona, :status, NOW(), :pesquisa_id, :tipo_opcao_id)");
 				$stmt->bindValue(":titulo", $perguntaTitulo[$key]);
@@ -92,14 +99,15 @@ ava_tipo_opcao
 				$perguntaIdNew = $conn->lastInsertId();
 
 				if ($perguntaTipoOpcao[$key] == 1 || $perguntaTipoOpcao[$key] == 2) {
-					$stmt = $conn->prepare("INSERT INTO ava_opcao (resposta, valor, direcao, tipo, controle, data_cadastro, pergunta_id) 
-																		VALUES (:resposta, :valor, :direcao, :tipo, :controle, NOW(), :pergunta_id)");
+					$stmt = $conn->prepare("INSERT INTO ava_opcao (resposta, valor, direcao, tipo, controle, data_cadastro, pergunta_id, status) 
+																		VALUES (:resposta, :valor, :direcao, :tipo, :controle, NOW(), :pergunta_id, :status)");
 					$stmt->bindValue(":resposta", "");
 					$stmt->bindValue(":valor", 0);
 					$stmt->bindValue(":direcao", "");
 					$stmt->bindValue(":tipo", "");
 					$stmt->bindValue(":controle", 0);
 					$stmt->bindValue(":pergunta_id", $perguntaIdNew);
+					$stmt->bindValue(":status", 1); //status 1 = ativo
 					$stmt->execute();
 
 				} else if ($perguntaTipoOpcao[$key] == 3 ) {
@@ -111,14 +119,15 @@ ava_tipo_opcao
 
 							if ($valueOp != "") {
 								$countOp++;
-								$stmt = $conn->prepare("INSERT INTO ava_opcao (resposta, valor, direcao, tipo, controle, data_cadastro, pergunta_id) 
-																					VALUES (:resposta, :valor, :direcao, :tipo, :controle, NOW(), :pergunta_id)");
+								$stmt = $conn->prepare("INSERT INTO ava_opcao (resposta, valor, direcao, tipo, controle, data_cadastro, pergunta_id, status) 
+																					VALUES (:resposta, :valor, :direcao, :tipo, :controle, NOW(), :pergunta_id, :status)");
 								$stmt->bindValue(":resposta", $valueOp);
 								$stmt->bindValue(":valor", 0);
 								$stmt->bindValue(":direcao", "");
 								$stmt->bindValue(":tipo", "");
 								$stmt->bindValue(":controle", $countOp);
 								$stmt->bindValue(":pergunta_id", $perguntaIdNew);
+								$stmt->bindValue(":status", 1); //status 1 = ativo
 								$stmt->execute();
 
 							}
@@ -136,14 +145,15 @@ ava_tipo_opcao
 
 							if ($valueOp != "") {
 								$countOp++;
-								$stmt = $conn->prepare("INSERT INTO ava_opcao (resposta, valor, direcao, tipo, controle, data_cadastro, pergunta_id) 
-																					VALUES (:resposta, :valor, :direcao, :tipo, :controle, NOW(), :pergunta_id)");
+								$stmt = $conn->prepare("INSERT INTO ava_opcao (resposta, valor, direcao, tipo, controle, data_cadastro, pergunta_id, status) 
+																					VALUES (:resposta, :valor, :direcao, :tipo, :controle, NOW(), :pergunta_id, :status)");
 								$stmt->bindValue(":resposta", $valueOp);
 								$stmt->bindValue(":valor", 0);
 								$stmt->bindValue(":direcao", "");
 								$stmt->bindValue(":tipo", "");
 								$stmt->bindValue(":controle", $countOp);
 								$stmt->bindValue(":pergunta_id", $perguntaIdNew);
+								$stmt->bindValue(":status", 1); //status 1 = ativo
 								$stmt->execute();
 
 							}
@@ -161,14 +171,15 @@ ava_tipo_opcao
 
 							if ($valueOp != "") {
 								$countOp++;
-								$stmt = $conn->prepare("INSERT INTO ava_opcao (resposta, valor, direcao, tipo, controle, data_cadastro, pergunta_id) 
-																					VALUES (:resposta, :valor, :direcao, :tipo, :controle, NOW(), :pergunta_id)");
+								$stmt = $conn->prepare("INSERT INTO ava_opcao (resposta, valor, direcao, tipo, controle, data_cadastro, pergunta_id, status) 
+																					VALUES (:resposta, :valor, :direcao, :tipo, :controle, NOW(), :pergunta_id, :status)");
 								$stmt->bindValue(":resposta", $valueOp);
 								$stmt->bindValue(":valor", 0);
 								$stmt->bindValue(":direcao", "");
 								$stmt->bindValue(":tipo", "");
 								$stmt->bindValue(":controle", $countOp);
 								$stmt->bindValue(":pergunta_id", $perguntaIdNew);
+								$stmt->bindValue(":status", 1); //status 1 = ativo
 								$stmt->execute();
 
 							}
@@ -179,24 +190,20 @@ ava_tipo_opcao
 				} else if ($perguntaTipoOpcao[$key] == 6 ) {
 
 					if (isset($_POST[$value.'_op_escala_numero'])) {
-
 						$countOp = 0;
-						for ($keyOp = $_POST[$value.'_op_escala_numero'][0] ; $keyOp <= $_POST[$value.'_op_escala_numero'][1] ; $keyOp ) {
+						for ($keyOp = $_POST[$value.'_op_escala_numero'][0] ; $keyOp <= $_POST[$value.'_op_escala_numero'][1] ; $keyOp++ ) {
 
-							if ($valueOp != "") {
-								$countOp++;
-								$stmt = $conn->prepare("INSERT INTO ava_opcao (resposta, valor, direcao, tipo, controle, data_cadastro, pergunta_id) 
-																					VALUES (:resposta, :valor, :direcao, :tipo, :controle, NOW(), :pergunta_id)");
-								$stmt->bindValue(":resposta", "$keyOp");
-								$stmt->bindValue(":valor", 0);
-								$stmt->bindValue(":direcao", "");
-								$stmt->bindValue(":tipo", "numero");
-								$stmt->bindValue(":controle", $countOp);
-								$stmt->bindValue(":pergunta_id", $perguntaIdNew);
-								$stmt->execute();
-
-							}
-
+							$countOp++;
+							$stmt = $conn->prepare("INSERT INTO ava_opcao (resposta, valor, direcao, tipo, controle, data_cadastro, pergunta_id, status) 
+																			VALUES (:resposta, :valor, :direcao, :tipo, :controle, NOW(), :pergunta_id, :status)");
+							$stmt->bindValue(":resposta", $keyOp);
+							$stmt->bindValue(":valor", 0);
+							$stmt->bindValue(":direcao", "");
+							$stmt->bindValue(":tipo", "numero");
+							$stmt->bindValue(":controle", $countOp);
+							$stmt->bindValue(":pergunta_id", $perguntaIdNew);
+							$stmt->bindValue(":status", 1); //status 1 = ativo
+							$stmt->execute();
 						}
 
 					}
@@ -204,17 +211,18 @@ ava_tipo_opcao
 				} else if ($perguntaTipoOpcao[$key] == 7 ) {
 
 					$countOp = 0;
-					for ($keyOp = 1 ; $keyOp <= 5 ; $keyOp ) {
+					for ($keyOp = 1 ; $keyOp <= 5 ; $keyOp++ ) {
 
 						$countOp++;
-						$stmt = $conn->prepare("INSERT INTO ava_opcao (resposta, valor, direcao, tipo, controle, data_cadastro, pergunta_id) 
-																			VALUES (:resposta, :valor, :direcao, :tipo, :controle, NOW(), :pergunta_id)");
-						$stmt->bindValue(":resposta", "$keyOp");
+						$stmt = $conn->prepare("INSERT INTO ava_opcao (resposta, valor, direcao, tipo, controle, data_cadastro, pergunta_id, status) 
+																		VALUES (:resposta, :valor, :direcao, :tipo, :controle, NOW(), :pergunta_id, :status)");
+						$stmt->bindValue(":resposta", $keyOp);
 						$stmt->bindValue(":valor", 0);
 						$stmt->bindValue(":direcao", "");
 						$stmt->bindValue(":tipo", "estrela");
 						$stmt->bindValue(":controle", $countOp);
 						$stmt->bindValue(":pergunta_id", $perguntaIdNew);
+						$stmt->bindValue(":status", 1); //status 1 = ativo
 						$stmt->execute();
 
 					}
@@ -222,17 +230,18 @@ ava_tipo_opcao
 				} else if ($perguntaTipoOpcao[$key] == 8 ) {
 
 					$countOp = 0;
-					for ($keyOp = 1 ; $keyOp <= 5 ; $keyOp ) {
+					for ($keyOp = 1 ; $keyOp <= 5 ; $keyOp++ ) {
 
 						$countOp++;
-						$stmt = $conn->prepare("INSERT INTO ava_opcao (resposta, valor, direcao, tipo, controle, data_cadastro, pergunta_id) 
-																			VALUES (:resposta, :valor, :direcao, :tipo, :controle, NOW(), :pergunta_id)");
-						$stmt->bindValue(":resposta", "$keyOp");
+						$stmt = $conn->prepare("INSERT INTO ava_opcao (resposta, valor, direcao, tipo, controle, data_cadastro, pergunta_id, status) 
+																		VALUES (:resposta, :valor, :direcao, :tipo, :controle, NOW(), :pergunta_id, :status)");
+						$stmt->bindValue(":resposta", $keyOp);
 						$stmt->bindValue(":valor", 0);
 						$stmt->bindValue(":direcao", "");
 						$stmt->bindValue(":tipo", "rosto");
 						$stmt->bindValue(":controle", $countOp);
 						$stmt->bindValue(":pergunta_id", $perguntaIdNew);
+						$stmt->bindValue(":status", 1); //status 1 = ativo
 						$stmt->execute();
 
 					}
@@ -248,32 +257,30 @@ ava_tipo_opcao
 
 								if ($valueOp != "") {
 									$countOp++;
-									$stmt = $conn->prepare("INSERT INTO ava_opcao (resposta, valor, direcao, tipo, controle, data_cadastro, pergunta_id) 
-																						VALUES (:resposta, :valor, :direcao, :tipo, :controle, NOW(), :pergunta_id)");
-									$stmt->bindValue(":resposta", $valueOp);
-									$stmt->bindValue(":valor", 0);
-									$stmt->bindValue(":direcao", "");
-									$stmt->bindValue(":tipo", "");
-									$stmt->bindValue(":controle", $countOp);
+									$stmt = $conn->prepare("INSERT INTO ava_grade_linha (titulo, status, pergunta_id, data_cadastro) 
+																						VALUES (:titulo, :status, :pergunta_id, NOW())");
+									$stmt->bindValue(":titulo", $valueOp);
+									$stmt->bindValue(":status", 1); //status 1 = ativo
 									$stmt->bindValue(":pergunta_id", $perguntaIdNew);
 									$stmt->execute();
 
-									$opcaoIdNew = $conn->lastInsertId();
+									$gradeLinhaIdNew = $conn->lastInsertId();
 
 									$countOpAux = 0;
 									foreach ($_POST[$value.'_op_grade_coluna'] as $keyOpAux => $valueOpAux) {
 
 										if ($valueOpAux != "") {
 											$countOpAux++;
-											$stmt = $conn->prepare("INSERT INTO ava_opcao (resposta, valor, direcao, tipo, controle, data_cadastro, pergunta_id, opcao_id_pai) 
-																								VALUES (:resposta, :valor, :direcao, :tipo, :controle, NOW(), :pergunta_id, :opcao_pai_id)");
+											$stmt = $conn->prepare("INSERT INTO ava_opcao (resposta, valor, direcao, tipo, controle, data_cadastro, pergunta_id, grade_linha_id, status) 
+																								VALUES (:resposta, :valor, :direcao, :tipo, :controle, NOW(), :pergunta_id, :grade_linha_id, :status)");
 											$stmt->bindValue(":resposta", $valueOpAux);
 											$stmt->bindValue(":valor", 0);
 											$stmt->bindValue(":direcao", "");
 											$stmt->bindValue(":tipo", "");
 											$stmt->bindValue(":controle", $countOpAux);
 											$stmt->bindValue(":pergunta_id", $perguntaIdNew);
-											$stmt->bindValue(":opcao_pai_id", $opcaoIdNew);
+											$stmt->bindValue(":grade_linha_id", $gradeLinhaIdNew);
+											$stmt->bindValue(":status", 1); //status 1 = ativo
 											$stmt->execute();
 
 										}
@@ -327,17 +334,18 @@ ava_tipo_opcao
 				} else if ($perguntaTipoOpcao[$key] == 12 ) {
 
 					$countOp = 0;
-					for ($keyOp = 1 ; $keyOp <= 2 ; $keyOp ) {
+					for ($keyOp = 1 ; $keyOp <= 2 ; $keyOp++ ) {
 
 						$countOp++;
-						$stmt = $conn->prepare("INSERT INTO ava_opcao (resposta, valor, direcao, tipo, controle, data_cadastro, pergunta_id) 
-																			VALUES (:resposta, :valor, :direcao, :tipo, :controle, NOW(), :pergunta_id)");
-						$stmt->bindValue(":resposta", "$keyOp");
+						$stmt = $conn->prepare("INSERT INTO ava_opcao (resposta, valor, direcao, tipo, controle, data_cadastro, pergunta_id, status) 
+																			VALUES (:resposta, :valor, :direcao, :tipo, :controle, NOW(), :pergunta_id, :status)");
+						$stmt->bindValue(":resposta", $keyOp);
 						$stmt->bindValue(":valor", 0);
 						$stmt->bindValue(":direcao", "");
 						$stmt->bindValue(":tipo", "curtir");
 						$stmt->bindValue(":controle", $countOp);
 						$stmt->bindValue(":pergunta_id", $perguntaIdNew);
+						$stmt->bindValue(":status", 1); //status 1 = ativo
 						$stmt->execute();
 
 					}
