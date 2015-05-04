@@ -116,7 +116,7 @@ if($param != null || $param != '' || $param != NULL){
       </div>
 
       <div>
-        <label for="empresa_logo">Foto</label>
+        <label for="empresa_logo">Logo</label>
         <div>
           <input type="file" id="empresa_logo" name="empresa_logo" class="fileArquivo" tabindex="5">
           <p class="help-block">Arquivos válidos: (.jpg, .jpeg, .png)</p>
